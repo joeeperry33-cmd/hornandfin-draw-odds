@@ -1,0 +1,39 @@
+.hfo{--g:#1A2312;--g2:#26341B;--o:#E8641B;--o2:#F07A35;--c:#F2EBDD;--c2:#FBF8F2;--l:#E3D9C6;--t:#2A2A22;--m:#6B6656;font-family:Barlow,system-ui,sans-serif;color:var(--t);margin:0 0 32px}
+.hfo *{box-sizing:border-box}
+.hfo .hfo-panel{background:#fff;border:1px solid var(--l);border-radius:14px;padding:20px;margin:0 0 18px}
+.hfo .hfo-controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;background:var(--g);border:0;color:var(--c)}
+.hfo label{display:block;font:700 13px "Barlow Condensed",sans-serif;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px;color:#CFC6B0}
+.hfo select,.hfo input[type=number],.hfo input[type=search]{width:100%;height:46px;border-radius:8px;border:1px solid #3A4D2E;background:var(--c);color:var(--g);font:600 16px Barlow,sans-serif;padding:0 12px}
+.hfo .hfo-seg{display:flex;border-radius:8px;overflow:hidden;border:1px solid #3A4D2E;height:46px}
+.hfo .hfo-seg button{flex:1;border:0;background:var(--c);color:var(--g);font:700 15px "Barlow Condensed",sans-serif;letter-spacing:.04em;text-transform:uppercase;cursor:pointer}
+.hfo .hfo-seg button[aria-pressed=true]{background:var(--o);color:#fff}
+.hfo h3{font:800 26px/1.1 "Barlow Condensed",sans-serif;text-transform:uppercase;color:var(--g);margin:0 0 10px}
+.hfo h4{font:800 19px/1.15 "Barlow Condensed",sans-serif;text-transform:uppercase;color:var(--g);margin:16px 0 8px}
+.hfo p{margin:0 0 10px;line-height:1.55}
+.hfo .hfo-muted{color:var(--m);font-size:14px}
+.hfo .hfo-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.hfo .hfo-fact{background:var(--c2);border:1px solid var(--l);border-radius:10px;padding:12px}
+.hfo .hfo-fact b{display:block;font:800 13px "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;color:var(--m);margin:0 0 4px}
+.hfo ul{margin:6px 0 10px 18px;padding:0}.hfo li{margin:0 0 4px;line-height:1.5}
+.hfo .hfo-tablewrap{overflow-x:auto;border:1px solid var(--l);border-radius:10px}
+.hfo table{width:100%;border-collapse:collapse;font-size:15px;min-width:560px!important;margin:0!important}
+.hfo th{background:var(--g);color:var(--c);font:700 13px "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-align:left;padding:10px;position:sticky;top:0;cursor:pointer;white-space:nowrap}
+.hfo td{padding:9px 10px;border-top:1px solid #EEE7D8;vertical-align:top}
+.hfo tbody tr:nth-child(even){background:#FBF9F4}
+.hfo tr.hfo-row{cursor:pointer}.hfo tr.hfo-row:hover{background:#FFF3EA}
+.hfo tr.hfo-me td{background:#FFE7D6!important;font-weight:700}
+.hfo .hfo-pill{display:inline-block;min-width:54px;text-align:center;border-radius:999px;padding:3px 10px;font:700 14px Barlow,sans-serif;color:#fff;background:#8A8473}
+.hfo .p-hi{background:#2F7D32}.hfo .p-mid{background:#C98A12}.hfo .p-lo{background:#B33A1E}.hfo .p-na{background:#9C9686}
+.hfo .hfo-big{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:8px 0 14px}
+.hfo .hfo-stat{background:var(--g);color:var(--c);border-radius:12px;padding:14px 16px}
+.hfo .hfo-stat b{display:block;font:800 34px/1 "Barlow Condensed",sans-serif;color:#fff}
+.hfo .hfo-stat span{font-size:14px;color:#CFC6B0}
+.hfo .hfo-btn{display:inline-block;background:var(--o);color:#fff!important;border:0;border-radius:8px;padding:10px 16px;font:700 15px "Barlow Condensed",sans-serif;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;cursor:pointer}
+.hfo .hfo-btn.alt{background:#fff;color:var(--g)!important;border:1px solid var(--l)}
+.hfo .hfo-bar{height:10px;background:#EEE7D8;border-radius:5px;overflow:hidden;min-width:60px}.hfo .hfo-bar i{display:block;height:100%;background:var(--o)}
+.hfo .hfo-note{background:#FFF7EE;border-left:4px solid var(--o);padding:10px 12px;border-radius:6px;font-size:14px;margin:10px 0}
+.hfo .hfo-searchrow{display:flex;gap:10px;align-items:center;margin:0 0 12px;flex-wrap:wrap}
+.hfo .hfo-searchrow input[type=search]{flex:1;min-width:200px}
+.hfo .hfo-searchrow .hfo-check{flex:0 0 auto}.hfo .hfo-check{display:flex;gap:6px;align-items:center;font-size:15px;color:var(--t);text-transform:none;letter-spacing:0;font-family:Barlow,sans-serif;font-weight:500;margin:0}
+@media(max-width:640px){.hfo .hfo-x{display:none}.hfo table{min-width:0!important}}
+@media(max-width:820px){.hfo .hfo-controls{grid-template-columns:1fr 1fr}.hfo .hfo-facts,.hfo .hfo-big{grid-template-columns:1fr}}
