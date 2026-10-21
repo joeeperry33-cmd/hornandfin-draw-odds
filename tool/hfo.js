@@ -100,7 +100,7 @@ function renderDetail(){var el=$('hfo-detail'),data=cache[S.st];if(!S.hunt||!dat
   var h0=data.hunts.filter(function(h){return h.id==S.hunt&&h.sp==S.sp})[0];if(!h0){el.hidden=true;return}el.hidden=false;
   var keys=poolsFor(h0,data);var pointsSys=gains(data,h0);var k=keys[0];var rows=k?rowsFor(h0,k,data):[];
   var fn=function(p){return oddsAt(h0,k,data,p)};var now=fn(S.pts),five=cumulative(fn,S.pts,5,pointsSys),full=fullAt(rows);
-  var h='<p class="hfo-muted"><a href="#" id="hfo-close">← Back to all hunts</a></p><h3>'+esc(h0.id)+(h0.name?' — '+esc(h0.name):'')+'</h3>';
+  var h='<p class="hfo-muted"><a href="#" id="hfo-close">← Back to all hunts</a></p><h3>'+esc(h0.id)+(h0.name?' — '+esc(h0.name):'')+'</h3>';if(h0.url)h+='<p class="hfo-muted"><a href="'+esc(h0.url)+'" target="_blank" rel="noopener">Hunt details, boundaries and rules from the state agency →</a></p>';
   if(!k){h+='<p>No '+(S.res=='res'?'resident':'nonresident')+' applicants or tags in this hunt last year'+(S.res=='nr'?' (it may be resident-only)':'')+'.</p>';el.innerHTML=h;bindClose();return}
   h+='<div class="hfo-big"><div class="hfo-stat"><b>'+pct(now)+'</b><span>'+(pointsSys?'chance last year with '+S.pts+' point'+(S.pts==1?'':'s')+(data.combine&&data.combine[k]?' (points draw + random draw)':''):'of applicants drew last year')+'</span></div>'+
      '<div class="hfo-stat"><b>'+pct(five)+'</b><span>chance of drawing at least once in 5 years'+(pointsSys?', gaining a point each year':'')+', if results look like last year</span></div>'+
