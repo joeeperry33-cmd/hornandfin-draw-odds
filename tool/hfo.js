@@ -5,7 +5,7 @@ var SPN={elk:'Elk',deer:'Deer',moose:'Moose',caribou:'Caribou',sheep:'Dall sheep
 var POOLS={res:'Residents',nr:'Nonresidents',all:'All applicants',nr_special:'Nonresidents (special price)',nr_rand:'Nonresidents (random draw)',nr_special_rand:'Nonresidents (special price, random draw)',out:'Outfitter pool (resident or nonresident with an outfitter)',youth_res:'Youth residents',youth_nr:'Youth nonresidents',landowner:'Landowners'};
 var RESPOOLS={res:['res','youth_res','landowner'],nr:['nr','nr_special','nr_rand','nr_special_rand','out','youth_nr']};
 var $=function(id){return document.getElementById(id)};
-var S={st:'co',sp:'elk',res:'nr',pts:0,q:'',sort:'apps',dir:-1,limit:50,onlyMine:false,hunt:null};
+var S={st:'co',sp:'elk',res:'nr',pts:0,q:'',sort:'apps',dir:-1,limit:50,onlyMine:false,hunt:null,weapon:'all',tab:'likely'};
 var cache={},rules=null;
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function money(v){return v==null?'—':(v===0?'Free':'$'+(+v).toFixed(v%1?2:0))}
@@ -33,9 +33,12 @@ function rateAt(rows,p){if(!rows.length)return null;
   if(!best){var nz=rows.filter(function(r){return r[1]>0});if(!nz.length)return null;var lo=nz[nz.length-1];return Math.min(1,lo[2]/lo[1])}
   return best[1]?Math.min(1,best[2]/best[1]):null}
 function fullAt(rows){var s=rows.filter(function(r){return r[0]!=null&&r[1]>0}).sort(function(a,b){return a[0]-b[0]});if(!s.length)return null;
-  for(var i=0;i<s.length;i++){var ok=true;for(var j=i;j<s.length;j++)if(s[j][2]<s[j][1]-0.01){ok=false;break}if(ok)return s[i][0]}return null}
+  for(var i=0;i<s.length;i++){var ok=true;for(var j=i;j<s.length;j++)if(s[j][2]<s[j][1]-0.01&&!(j>i&&s[j][1]<=2)){ok=false;break}if(ok)return s[i][0]}return null}
 function lowestDrew(rows){var s=rows.filter(function(r){return r[0]!=null&&r[2]>0});if(!s.length)return null;return Math.min.apply(null,s.map(function(r){return r[0]}))}
-function oddsAt(h,k,data,p){var rows=rowsFor(h,k,data);var r=rateAt(rows,p);var c=data.combine&&data.combine[k];if(c&&h[c]&&h[c].length&&r!=null){var pr=rateAt(h[c],p);if(pr!=null)r=r+(1-r)*pr}return r}
+function levelAt(rows,p){var best=null;rows.forEach(function(r){if(r[0]!=null&&r[1]>0&&r[0]<=p&&(best==null||r[0]>best[0]))best=r});return best}
+function oddsAt(h,k,data,p){var rows=rowsFor(h,k,data);var r;var nz=rows.filter(function(x){return x[0]!=null&&x[1]>0});
+  if(nz.length&&p<Math.min.apply(null,nz.map(function(x){return x[0]}))){var q=h.q||{},tags=q[k]!=null?q[k]:q.all,dr=rows.reduce(function(a,x){return a+(x[2]||0)},0);
+    if(tags!=null&&dr<tags-0.5)r=1;else if(/pref|hybrid/.test(h.system||data.system||''))r=0;else r=rateAt(rows,p)}else r=rateAt(rows,p);var c=data.combine&&data.combine[k];if(c&&h[c]&&h[c].length&&r!=null){var pr=rateAt(h[c],p);if(pr!=null)r=r+(1-r)*pr}return r}
 function cumulative(fn,p,years,gain){var miss=1;for(var y=0;y<years;y++){var r=fn(p+(gain?y:0));if(r==null)return null;miss*=(1-r)}return 1-miss}
 function gains(data,h){var s=(h&&h.system)||(data&&data.system);return !!s&&s!='random'&&s!='none'}
 function primary(h,data){var ks=poolsFor(h,data);return ks.length?ks[0]:null}
@@ -56,22 +59,23 @@ function renderRules(){var el=$('hfo-rules'),r=rules&&rules[S.st];if(!r){el.inne
      '<div class="hfo-fact"><b>You lose points if</b>'+esc(v.lose_points_if||'—')+'</div></div>';
   if(v.waiting_period&&!/^none/i.test(v.waiting_period))h+='<p class="hfo-muted"><b>Waiting period:</b> '+esc(v.waiting_period)+'</p>';
   h+='<p><a class="hfo-btn alt" href="/hunting-guides/'+esc(r.page_slug)+'/">Full '+esc(nm)+' points guide</a></p>';el.innerHTML=h}
-function huntRows(data){var hs=data.hunts.filter(function(h){return h.sp==S.sp});var out=[];
+function weaponOf(n){n=n||'';if(/archery|\bbow|bowhunt/i.test(n))return 'archery';if(/muzzle/i.test(n))return 'muzzle';if(/rifle|any legal|\balw\b|any weapon|centerfire/i.test(n))return 'rifle';return 'other'}
+function huntRows(data){var hs=data.hunts.filter(function(h){return h.sp==S.sp&&(S.weapon=='all'||weaponOf(h.name)==S.weapon)});var out=[];
   hs.forEach(function(h){var k=primary(h,data);if(!k)return;var rows=rowsFor(h,k,data);
     var q=h.q||{};var tags=k=='all'?q.all:(q[k]!=null?q[k]:(q.all!=null?q.all:null));
-    out.push({h:h,k:k,rows:rows,odds:oddsAt(h,k,data,S.pts),full:fullAt(rows),low:lowestDrew(rows),tags:tags,apps:rows.reduce(function(s,r){return s+(r[1]||0)},0)})});
+    var lv=levelAt(rows,S.pts);out.push({h:h,k:k,rows:rows,n:lv?lv[1]:null,odds:oddsAt(h,k,data,S.pts),full:fullAt(rows),low:lowestDrew(rows),tags:tags,apps:rows.reduce(function(s,r){return s+(r[1]||0)},0)})});
   return out}
 function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.st],v=r&&r.species[S.sp],nm=stateName(S.st);
   if(data===undefined){el.innerHTML='<p class="hfo-muted">Loading draw results…</p>';return}
   if(!data||!data.hunts||!data.hunts.some(function(h){return h.sp==S.sp})){el.innerHTML=tierPanel(v,nm,data);return}
   var list=huntRows(data);var ql=S.q.toLowerCase();
   if(ql)list=list.filter(function(x){return (x.h.id+' '+x.h.name).toLowerCase().indexOf(ql)>=0});
-  if(S.onlyMine)list=list.filter(function(x){return x.odds!=null&&x.odds>=0.5});
+  if(S.onlyMine)list=list.filter(function(x){return x.odds!=null&&x.odds>=0.75});
   var key=S.sort,d=S.dir;list.sort(function(a,b){var A=a[key],B=b[key];if(key=='id'){A=a.h.id;B=b.h.id;return A<B?-d:A>B?d:0}if(A==null)A=-1;if(B==null)B=-1;return (A-B)*d});
   var pointsSys=gains(data);
   var h='<h3>Every '+esc(nm)+' '+esc((SPN[S.sp]||S.sp).toLowerCase())+' hunt</h3><p class="hfo-muted">'+esc(data.year)+' draw results from '+srcLinks(data)+'. '+esc(data.about||'')+'</p>';
   (data.notes||[]).forEach(function(n){h+='<div class="hfo-note">'+esc(n)+'</div>'});
-  h+='<div class="hfo-searchrow"><input type="search" id="hfo-q" placeholder="Search hunt code, unit or area" value="'+esc(S.q)+'"><label class="hfo-check"><input type="checkbox" id="hfo-mine" '+(S.onlyMine?'checked':'')+'> Only hunts I\'d likely draw (50%+)</label></div>';
+  h+='<div class="hfo-searchrow"><input type="search" id="hfo-q" placeholder="Search hunt code, unit or area" value="'+esc(S.q)+'"><label class="hfo-check"><input type="checkbox" id="hfo-mine" '+(S.onlyMine?'checked':'')+'> Only hunts I\'d likely draw (75%+)</label></div>';
   h+='<div class="hfo-tablewrap"><table><thead><tr><th data-k="id">Hunt</th><th data-k="tags">Tags</th><th data-k="apps" class="hfo-x">Applicants</th><th data-k="odds">'+(pointsSys?'Odds at '+S.pts+' pts':'Draw odds')+'</th>'+(pointsSys?'<th data-k="full" class="hfo-x">Everyone drew at</th><th data-k="low" class="hfo-x">Lowest drew</th>':'')+'</tr></thead><tbody>';
   list.slice(0,S.limit).forEach(function(x,i){h+='<tr class="hfo-row" data-i="'+esc(x.h.id)+'"><td><b>'+esc(x.h.id)+'</b><br><span class="hfo-muted">'+esc(x.h.name)+'</span></td><td>'+(x.tags==null?'—':x.tags)+'</td><td class="hfo-x">'+x.apps+'</td><td>'+pill(x.odds)+'</td>'+(pointsSys?'<td class="hfo-x">'+(x.full==null?'Not everyone':x.full+' pts')+'</td><td class="hfo-x">'+(x.low==null?'—':x.low+' pts')+'</td>':'')+'</tr>'});
   h+='</tbody></table></div>';
@@ -114,13 +118,39 @@ function renderDetail(){var el=$('hfo-detail'),data=cache[S.st];if(!S.hunt||!dat
   h+='<p class="hfo-muted">Source: '+srcLinks(data)+'. Past results don\'t guarantee future odds; quotas and applicant numbers change every year.</p>';
   el.innerHTML=h;bindClose()}
 function bindClose(){var c=$('hfo-close');if(c)c.addEventListener('click',function(e){e.preventDefault();S.hunt=null;renderDetail();$('hfo-hunts').scrollIntoView({behavior:'smooth'})})}
-function all(){renderControls();renderRules();renderHunts();renderDetail()}
+function demand(x){return x.tags?x.apps/x.tags:0}
+function bestSort(a,b,pointsSys){if(pointsSys){var A=a.full!=null?a.full:(a.low!=null?a.low:0),B=b.full!=null?b.full:(b.low!=null?b.low:0);if(A!=B)return B-A}else if(Math.abs(b.odds-a.odds)>0.001)return b.odds-a.odds;return (b.tags||0)-(a.tags||0)||b.apps-a.apps}
+function renderBest(){var el=$('hfo-best');if(!el){el=document.createElement('div');el.className='hfo-panel';el.id='hfo-best';$('hfo-detail').parentNode.insertBefore(el,$('hfo-detail'))}
+  var data=cache[S.st];if(!data||!data.hunts||!data.hunts.some(function(h){return h.sp==S.sp})){el.hidden=true;return}el.hidden=false;
+  var pointsSys=gains(data),nm=stateName(S.st),spn=(SPN[S.sp]||S.sp).toLowerCase(),who=S.res=='res'?'resident':'nonresident';
+  var all=huntRows(data).filter(function(x){return x.odds!=null});
+  function solid(x){return !pointsSys||x.full==null||x.full<=S.pts||(x.n!=null&&x.n>=5)}
+  var likely=all.filter(function(x){return x.odds>=0.75&&solid(x)}),good=all.filter(function(x){return x.odds>=0.4&&solid(x)&&!(x.odds>=0.75)});
+  likely.sort(function(a,b){return bestSort(a,b,pointsSys)});good.sort(function(a,b){return b.odds-a.odds||bestSort(a,b,pointsSys)});
+  var list=S.tab=='good'?good:likely;
+  var hasW=data.hunts.some(function(h){return h.sp==S.sp&&weaponOf(h.name)!='other'});
+  var h='<h3>'+(pointsSys?esc(nm)+' '+spn+' hunts you\'d likely draw with '+S.pts+' point'+(S.pts==1?'':'s'):'Your best '+esc(nm)+' '+spn+' odds as a '+who)+'</h3>';
+  h+='<p class="hfo-muted">Based on last year\'s results for '+who+'s'+(pointsSys?' with your points':'')+'. <b>Likely</b> means at least 75% drew; <b>good chance</b> means 40–74%. '+(pointsSys?'Hunts that took the most points are listed first, so the best hunts you can get are at the top.':'Your best odds are listed first.')+'</p>';
+  h+='<div class="hfo-searchrow"><div class="hfo-seg hfo-tabs" style="flex:1;min-width:240px"><button type="button" data-t="likely" aria-pressed="'+(S.tab!='good')+'">Likely ('+likely.length+')</button><button type="button" data-t="good" aria-pressed="'+(S.tab=='good')+'">Good chance ('+good.length+')</button></div>'+
+     (hasW?'<select id="hfo-weapon" style="max-width:220px"><option value="all">All weapons</option><option value="archery">Archery</option><option value="muzzle">Muzzleloader</option><option value="rifle">Rifle / any weapon</option></select>':'')+'</div>';
+  if(!list.length){h+='<p>'+(S.tab=='good'?'No hunts fell in the 40–74% range':'No hunts drew 75% or more of '+who+'s'+(pointsSys?' with '+S.pts+' point'+(S.pts==1?'':'s'):''))+' last year'+(S.weapon!='all'?' for that weapon':'')+'. '+(S.tab=='good'?'':'Check the Good chance tab'+(pointsSys?', or keep building points':'')+'.')+'</p>'}
+  else{h+='<div class="hfo-tablewrap"><table><thead><tr><th>Hunt</th><th>Your odds</th><th>Tags</th><th class="hfo-x">Applicants per tag</th>'+(pointsSys?'<th class="hfo-x">Everyone drew at</th>':'')+'</tr></thead><tbody>';
+    list.slice(0,15).forEach(function(x){h+='<tr class="hfo-row" data-i="'+esc(x.h.id)+'"><td><b>'+esc(x.h.id)+'</b><br><span class="hfo-muted">'+esc(x.h.name)+'</span></td><td>'+pill(x.odds)+'</td><td>'+(x.tags==null?'—':x.tags)+'</td><td class="hfo-x">'+(x.tags?(x.apps/x.tags).toFixed(1):'—')+'</td>'+(pointsSys?'<td class="hfo-x">'+(x.full==null?'Not everyone':x.full+' pts')+'</td>':'')+'</tr>'});
+    h+='</tbody></table></div>';
+    if(list.length>15)h+='<p class="hfo-muted" style="margin-top:10px">Showing the top 15 of '+list.length+'. <a href="#" id="hfo-seeall">See them all in the full list</a>.</p>'}
+  h+='<p class="hfo-muted" style="margin-top:10px">Odds change every year with quotas and point creep. Click a hunt for the full breakdown.</p>';
+  el.innerHTML=h;
+  [].forEach.call(el.querySelectorAll('.hfo-tabs button'),function(b){b.addEventListener('click',function(){S.tab=b.dataset.t;renderBest()})});
+  var w=$('hfo-weapon');if(w){w.value=S.weapon;w.addEventListener('change',function(){S.weapon=w.value;S.limit=50;renderBest();renderHunts()})}
+  var sa=$('hfo-seeall');if(sa)sa.addEventListener('click',function(e){e.preventDefault();S.onlyMine=S.tab!='good';S.sort='odds';S.dir=-1;renderHunts();$('hfo-hunts').scrollIntoView({behavior:'smooth'})});
+  [].forEach.call(el.querySelectorAll('tr.hfo-row'),function(tr){tr.addEventListener('click',function(){S.hunt=tr.dataset.i;renderDetail();$('hfo-detail').scrollIntoView({behavior:'smooth',block:'start'})})})}
+function all(){renderControls();renderRules();renderBest();renderHunts();renderDetail()}
 function go(){loadRules().then(function(){return loadState(S.st)}).then(all,all)}
 // ---------- events ----------
-$('hfo-st').addEventListener('change',function(e){S.st=e.target.value;S.hunt=null;S.q='';S.limit=50;all();go()});
-$('hfo-sp').addEventListener('change',function(e){S.sp=e.target.value;S.hunt=null;S.limit=50;all()});
+$('hfo-st').addEventListener('change',function(e){S.st=e.target.value;S.hunt=null;S.q='';S.limit=50;S.weapon='all';all();go()});
+$('hfo-sp').addEventListener('change',function(e){S.sp=e.target.value;S.hunt=null;S.limit=50;S.weapon='all';all()});
 [].forEach.call($('hfo-res').querySelectorAll('button'),function(b){b.addEventListener('click',function(){S.res=b.dataset.v;all()})});
-$('hfo-pts').addEventListener('input',function(e){var v=parseInt(e.target.value,10);S.pts=isNaN(v)?0:Math.max(0,Math.min(40,v));renderHunts();renderDetail()});
+$('hfo-pts').addEventListener('input',function(e){var v=parseInt(e.target.value,10);S.pts=isNaN(v)?0:Math.max(0,Math.min(40,v));renderBest();renderHunts();renderDetail()});
 var qs=new URLSearchParams(location.search);if(qs.get('state'))S.st=qs.get('state');if(qs.get('species'))S.sp=qs.get('species');if(qs.get('res'))S.res=qs.get('res')=='res'?'res':'nr';
 all();go();
 })();
