@@ -51,7 +51,7 @@ function renderRules(){var el=$('hfo-rules'),r=rules&&rules[S.st];if(!r){el.inne
   var who=S.res=='res'?v.resident||{}:v.nonresident||{};
   var h='<h3>How '+esc(nm)+' '+esc((SPN[S.sp]||S.sp).toLowerCase())+' draws work</h3><p>'+esc(v.system_summary)+'</p>';
   if(v.allocation&&v.allocation.length){h+='<ul>'+v.allocation.map(function(a){return '<li>'+(a.pct!=null?'<b>'+a.pct+'%</b> — ':'')+esc(a.pool)+'</li>'}).join('')+'</ul>'}
-  h+='<div class="hfo-facts"><div class="hfo-fact"><b>'+(S.res=='res'?'Resident':'Nonresident')+' point / application</b>'+money(who.point_only_fee!=null?who.point_only_fee:who.application_fee)+'</div>'+
+  h+='<div class="hfo-facts"><div class="hfo-fact"><b>'+(S.res=='res'?'Resident':'Nonresident')+' cost to apply</b>'+(who.point_only_fee!=null&&who.point_only_fee!==who.application_fee?'Point: '+money(who.point_only_fee)+'<br>':'')+(who.application_fee!=null?'Application: '+money(who.application_fee):(who.point_only_fee!=null?'Point: '+money(who.point_only_fee):'—'))+'</div>'+
      '<div class="hfo-fact"><b>Nonresident share</b>'+esc(v.nonresident_quota||'—')+'</div>'+
      '<div class="hfo-fact"><b>You lose points if</b>'+esc(v.lose_points_if||'—')+'</div></div>';
   if(v.waiting_period&&!/^none/i.test(v.waiting_period))h+='<p class="hfo-muted"><b>Waiting period:</b> '+esc(v.waiting_period)+'</p>';
