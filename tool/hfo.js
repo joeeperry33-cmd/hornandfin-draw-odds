@@ -37,8 +37,8 @@ function fullAt(rows){var s=rows.filter(function(r){return r[0]!=null&&r[1]>0}).
 function lowestDrew(rows){var s=rows.filter(function(r){return r[0]!=null&&r[2]>0});if(!s.length)return null;return Math.min.apply(null,s.map(function(r){return r[0]}))}
 function levelAt(rows,p){var best=null;rows.forEach(function(r){if(r[0]!=null&&r[1]>0&&r[0]<=p&&(best==null||r[0]>best[0]))best=r});return best}
 function oddsAt(h,k,data,p){var rows=rowsFor(h,k,data);var r;var nz=rows.filter(function(x){return x[0]!=null&&x[1]>0});
-  if(nz.length&&p<Math.min.apply(null,nz.map(function(x){return x[0]}))){var q=h.q||{},tags=q[k]!=null?q[k]:q.all,dr=rows.reduce(function(a,x){return a+(x[2]||0)},0);
-    if(tags!=null&&dr<tags-0.5&&!(data.combine&&data.combine[k]))r=1;else if(/pref|hybrid/.test(h.system||data.system||''))r=0;else r=rateAt(rows,p)}else r=rateAt(rows,p);var c=data.combine&&data.combine[k];if(c&&h[c]&&h[c].length&&r!=null){var pr=rateAt(h[c],p);if(pr!=null)r=r+(1-r)*pr}return r}
+  if(nz.length&&p<Math.min.apply(null,nz.map(function(x){return x[0]}))){var q=h.q||{},tags=q[k]!=null?q[k]:q.all,dr=rows.reduce(function(a,x){return a+(x[2]||0)},0),ap=rows.reduce(function(a,x){return a+(x[1]||0)},0);
+    if(tags!=null&&dr<tags-0.5&&dr>=ap-0.5&&!(data.combine&&data.combine[k]))r=1;else if(/pref|hybrid/.test(h.system||data.system||''))r=0;else r=rateAt(rows,p)}else r=rateAt(rows,p);var c=data.combine&&data.combine[k];if(c&&h[c]&&h[c].length&&r!=null){var pr=rateAt(h[c],p);if(pr!=null)r=r+(1-r)*pr}return r}
 function cumulative(fn,p,years,gain){var miss=1;for(var y=0;y<years;y++){var r=fn(p+(gain?y:0));if(r==null)return null;miss*=(1-r)}return 1-miss}
 function gains(data,h){var s=(h&&h.system)||(data&&data.system);return !!s&&s!='random'&&s!='none'}
 function primary(h,data){var ks=poolsFor(h,data);return ks.length?ks[0]:null}
