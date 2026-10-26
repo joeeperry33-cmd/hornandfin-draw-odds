@@ -5,7 +5,7 @@ var SPN={elk:'Elk',deer:'Deer',moose:'Moose',caribou:'Caribou',sheep:'Dall sheep
 var POOLS={res:'Residents',nr:'Nonresidents',all:'All applicants',nr_special:'Nonresidents (special price)',nr_rand:'Nonresidents (random draw)',nr_special_rand:'Nonresidents (special price, random draw)',out:'Outfitter pool (resident or nonresident with an outfitter)',youth_res:'Youth residents',youth_nr:'Youth nonresidents',landowner:'Landowners'};
 var RESPOOLS={res:['res','youth_res','landowner'],nr:['nr','nr_special','nr_rand','nr_special_rand','out','youth_nr']};
 var $=function(id){return document.getElementById(id)};
-var S={st:'co',sp:'elk',res:'nr',pts:0,q:'',sort:'apps',dir:-1,limit:50,onlyMine:false,hunt:null,weapon:'all',tab:'likely'};
+var S={st:'co',sp:'elk',res:'nr',pts:0,q:'',sort:'apps',dir:-1,limit:50,onlyMine:false,hunt:null,weapon:'all',tab:'likely',unit:'',uq:''};
 var cache={},rules=null;
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function money(v){return v==null?'—':(v===0?'Free':'$'+(+v).toFixed(v%1?2:0))}
@@ -144,13 +144,58 @@ function renderBest(){var el=$('hfo-best');if(!el){el=document.createElement('di
   var w=$('hfo-weapon');if(w){w.value=S.weapon;w.addEventListener('change',function(){S.weapon=w.value;S.limit=50;renderBest();renderHunts()})}
   var sa=$('hfo-seeall');if(sa)sa.addEventListener('click',function(e){e.preventDefault();S.onlyMine=S.tab!='good';S.sort='odds';S.dir=-1;renderHunts();$('hfo-hunts').scrollIntoView({behavior:'smooth'})});
   [].forEach.call(el.querySelectorAll('tr.hfo-row'),function(tr){tr.addEventListener('click',function(){S.hunt=tr.dataset.i;renderDetail();$('hfo-detail').scrollIntoView({behavior:'smooth',block:'start'})})})}
-function all(){renderControls();renderRules();renderBest();renderHunts();renderDetail()}
+// ---------- unit lookup ----------
+function renderUnitKeep(){if(S.unit)renderUnit()}
+function unitOf(h,st){var n=h.name||'';if(!n)return 'Hunt '+h.id;var m;
+  if(st=='ut')return n.split(' — ')[0].trim();
+  if(st=='nv'){m=n.match(/^(Units? .*?), (Elk|Mule Deer|Deer|Antelope|Pronghorn|Bighorn|Mountain|Desert|California|Rocky)/);return m?m[1]:n.split(',')[0]}
+  if(st=='ca'){m=n.match(/^(Zone [A-Z0-9-]+|[A-Z]{1,2}-?\d+[A-Z]?)\b/);if(m)return m[1];return n.split(/ Period| - | Late| Early| Archery| Either| Buck| Bull| Antlerless| General| Apprentice| Muzzle| Hunt/)[0].trim()}
+  var u=n.split(/,| \| |: | — /)[0].trim();if(st=='or'){m=u.match(/^(.*?\bUnits?)\b/);if(m)u=m[1]}return u}
+function natKey(u){return u.replace(/\d+/g,function(d){return ('00000'+d).slice(-5)}).toLowerCase()}
+function unitList(data){var m={};data.hunts.forEach(function(h){if(h.sp!=S.sp)return;var u=unitOf(h,S.st);m[u]=(m[u]||0)+1});return Object.keys(m).sort(function(a,b){return natKey(a)<natKey(b)?-1:1}).map(function(u){return [u,m[u]]})}
+function primaryFor(h,data,res){var ks=[];(RESPOOLS[res]||[]).forEach(function(k){if(h[k]&&h[k].length&&k.indexOf('youth')<0&&k!='landowner')ks.push(k)});if(!ks.length&&h.all&&h.all.length)ks.push('all');return ks[0]||null}
+function needCell(h,data,res,pointsSys){var k=primaryFor(h,data,res);if(!k)return '<td class="hfo-nd">'+(res=='nr'?'Resident only':'—')+'</td>';
+  var rows=rowsFor(h,k,data),q=h.q||{},tags=q[k]!=null?q[k]:null;
+  if(!pointsSys){var o=oddsAt(h,k,data,0);return '<td>'+pill(o)+(tags!=null?'<br><span class="hfo-muted">'+tags+' tag'+(tags==1?'':'s')+'</span>':'')+'</td>'}
+  var full=fullAt(rows),low=lowestDrew(rows),apps=rows.reduce(function(a,r){return a+(r[1]||0)},0),dr=rows.reduce(function(a,r){return a+(r[2]||0)},0);
+  if(apps&&dr>=apps-0.5)return '<td><b class="hfo-need">0 pts</b><br><span class="hfo-muted">Everyone drew'+(tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'')+'</span></td>';
+  if(low==null)return '<td><b class="hfo-need">Nobody drew</b><br><span class="hfo-muted">'+(tags===0?'No tags for this group':apps+' applied')+'</span></td>';
+  var mine=oddsAt(h,k,data,S.pts);
+  return '<td><b class="hfo-need">'+(full!=null?full+' pts':low+'+ pts')+'</b><br><span class="hfo-muted">'+(full!=null?(low<full?'Some drew with '+low:'Everyone drew at '+full):'Lowest who drew had '+low+'; nobody was guaranteed')+(tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'')+'</span>'+(res==S.res?'<br><span class="hfo-muted">You ('+S.pts+' pts): </span>'+pill(mine):'')+'</td>'}
+function shortName(h,u){var n=h.name||'';if(n.indexOf(u)==0)n=n.slice(u.length).replace(/^[\s,:|—-]+/,'');return n||h.id}
+function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('div');el.className='hfo-panel hfo-unitpanel';el.id='hfo-unit';var c=document.querySelector('.hfo-controls');c.parentNode.insertBefore(el,c.nextSibling)}
+  var data=cache[S.st],nm=stateName(S.st),spn=(SPN[S.sp]||S.sp).toLowerCase();
+  if(data===undefined){el.innerHTML='<h3>Points needed by unit</h3><p class="hfo-muted">Loading…</p>';return}
+  if(!data||!data.hunts||!data.hunts.some(function(h){return h.sp==S.sp})){el.hidden=true;return}el.hidden=false;
+  var units=unitList(data);if(S.unit&&!units.some(function(u){return u[0]==S.unit}))S.unit='';
+  var pointsSys=gains(data);
+  var h='<h3>'+(pointsSys?'How many points does a unit take?':'What are the odds in a unit?')+'</h3><p class="hfo-muted">Pick a '+esc(nm)+' '+spn+' unit or area to see '+(pointsSys?'how many points it took to draw each hunt there last year, for residents and nonresidents.':'last year\'s draw odds for each hunt there. '+esc(nm)+' has no preference points, so everyone has the same chance.')+'</p>';
+  h+='<div class="hfo-combo"><input type="search" id="hfo-uq" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="hfo-ulist" placeholder="Type a unit, e.g. '+esc(units.length?units[Math.min(5,units.length-1)][0]:'')+'" value="'+esc(S.unit||S.uq)+'"><ul id="hfo-ulist" role="listbox" hidden></ul></div>';
+  if(S.unit){var hs=data.hunts.filter(function(x){return x.sp==S.sp&&unitOf(x,S.st)==S.unit});
+    h+='<div class="hfo-unithead"><b>'+esc(S.unit)+'</b> · '+hs.length+' '+spn+' hunt'+(hs.length==1?'':'s')+' · '+esc(data.year)+' results</div>';
+    h+='<div class="hfo-tablewrap"><table class="hfo-unittable"><thead><tr><th>Hunt</th><th'+(S.res=='res'?' class="hfo-mycol"':'')+'>Residents'+(pointsSys?' need':'')+'</th><th'+(S.res=='nr'?' class="hfo-mycol"':'')+'>Nonresidents'+(pointsSys?' need':'')+'</th></tr></thead><tbody>';
+    hs.forEach(function(x){h+='<tr class="hfo-row" data-i="'+esc(x.id)+'"><td><b>'+esc(x.id)+'</b><br><span class="hfo-muted">'+esc(shortName(x,S.unit))+'</span></td>'+needCell(x,data,'res',pointsSys)+needCell(x,data,'nr',pointsSys)+'</tr>'});
+    h+='</tbody></table></div><p class="hfo-muted" style="margin-top:10px">'+(pointsSys?'"Points needed" is the fewest points where everyone who applied drew last year. "Some drew with" is the lowest point level that got lucky'+(/bonus/.test(data.system||'')?' (in a bonus-point state, extra points only add chances)':'')+'. Expect point creep to push these up a bit each year. ':'')+'Click a hunt for the full breakdown.</p>'}
+  el.innerHTML=h;
+  var inp=$('hfo-uq'),ul=$('hfo-ulist'),act=-1;
+  function show(){var q=inp.value.trim().toLowerCase().replace(/^(gmu|unit|units|area|hd|zone)\s*/,'');var m=units.filter(function(u){var l=u[0].toLowerCase();return !q||l.indexOf(q)>=0||l.replace(/^(gmu|units?|area|hd|zone)\s*/,'').indexOf(q)==0});
+    m.sort(function(a,b){var A=a[0].toLowerCase().replace(/^(gmu|units?|area|hd|zone)\s*/,''),B=b[0].toLowerCase().replace(/^(gmu|units?|area|hd|zone)\s*/,'');var a0=A.indexOf(q)==0?0:1,b0=B.indexOf(q)==0?0:1;return a0-b0||(natKey(a[0])<natKey(b[0])?-1:1)});
+    m=m.slice(0,60);act=-1;ul.innerHTML=m.length?m.map(function(u,i){return '<li role="option" data-u="'+esc(u[0])+'">'+esc(u[0])+' <span>'+u[1]+' hunt'+(u[1]==1?'':'s')+'</span></li>'}).join(''):'<li class="hfo-none">No unit matches</li>';ul.hidden=false;inp.setAttribute('aria-expanded','true')}
+  function pick(u){S.unit=u;S.uq='';try{var qs=new URLSearchParams(location.search);qs.set('state',S.st);qs.set('species',S.sp);qs.set('unit',u);history.replaceState(null,'','?'+qs.toString())}catch(e){}renderUnit();var t=$('hfo-unit');if(t)t.scrollIntoView({behavior:'smooth',block:'start'})}
+  inp.addEventListener('focus',function(){inp.select();show()});
+  inp.addEventListener('input',function(){S.uq=inp.value;show()});
+  inp.addEventListener('keydown',function(e){var li=ul.querySelectorAll('li[data-u]');if(e.key=='ArrowDown'||e.key=='ArrowUp'){e.preventDefault();if(ul.hidden)show();act=Math.max(0,Math.min(li.length-1,act+(e.key=='ArrowDown'?1:-1)));[].forEach.call(li,function(x,i){x.classList.toggle('on',i==act);if(i==act)x.scrollIntoView({block:'nearest'})})}
+    else if(e.key=='Enter'){e.preventDefault();var t=li[act>=0?act:0];if(t)pick(t.dataset.u)}else if(e.key=='Escape'){ul.hidden=true}});
+  ul.addEventListener('mousedown',function(e){var t=e.target.closest('li[data-u]');if(t){e.preventDefault();pick(t.dataset.u)}});
+  inp.addEventListener('blur',function(){setTimeout(function(){ul.hidden=true;inp.setAttribute('aria-expanded','false')},150)});
+  [].forEach.call(el.querySelectorAll('tr.hfo-row'),function(tr){tr.addEventListener('click',function(){S.hunt=tr.dataset.i;renderDetail();$('hfo-detail').scrollIntoView({behavior:'smooth',block:'start'})})})}
+function all(){renderControls();renderUnit();renderRules();renderBest();renderHunts();renderDetail()}
 function go(){loadRules().then(function(){return loadState(S.st)}).then(all,all)}
 // ---------- events ----------
-$('hfo-st').addEventListener('change',function(e){S.st=e.target.value;S.hunt=null;S.q='';S.limit=50;S.weapon='all';all();go()});
-$('hfo-sp').addEventListener('change',function(e){S.sp=e.target.value;S.hunt=null;S.limit=50;S.weapon='all';all()});
+$('hfo-st').addEventListener('change',function(e){S.st=e.target.value;S.hunt=null;S.unit='';S.uq='';S.q='';S.limit=50;S.weapon='all';all();go()});
+$('hfo-sp').addEventListener('change',function(e){S.sp=e.target.value;S.hunt=null;S.unit='';S.uq='';S.limit=50;S.weapon='all';all()});
 [].forEach.call($('hfo-res').querySelectorAll('button'),function(b){b.addEventListener('click',function(){S.res=b.dataset.v;all()})});
-$('hfo-pts').addEventListener('input',function(e){var v=parseInt(e.target.value,10);S.pts=isNaN(v)?0:Math.max(0,Math.min(40,v));renderBest();renderHunts();renderDetail()});
-var qs=new URLSearchParams(location.search);if(qs.get('state'))S.st=qs.get('state');if(qs.get('species'))S.sp=qs.get('species');if(qs.get('res'))S.res=qs.get('res')=='res'?'res':'nr';
+$('hfo-pts').addEventListener('input',function(e){var v=parseInt(e.target.value,10);S.pts=isNaN(v)?0:Math.max(0,Math.min(40,v));renderUnitKeep();renderBest();renderHunts();renderDetail()});
+var qs=new URLSearchParams(location.search);if(qs.get('state'))S.st=qs.get('state');if(qs.get('species'))S.sp=qs.get('species');if(qs.get('res'))S.res=qs.get('res')=='res'?'res':'nr';if(qs.get('unit'))S.unit=qs.get('unit');
 all();go();
 })();
