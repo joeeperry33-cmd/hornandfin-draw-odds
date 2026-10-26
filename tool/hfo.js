@@ -166,6 +166,12 @@ function needCell(h,data,res,pointsSys){var k=primaryFor(h,data,res);if(!k)retur
   if(low==null)return '<td><b class="hfo-need">Nobody drew</b><br><span class="hfo-muted">'+(tags===0?'No tags for this group':apps+' applied')+'</span></td>';
   var mine=oddsAt(h,k,data,S.pts);
   return '<td><b class="hfo-need">'+(full!=null?ptsTxt(full):'No sure thing')+'</b><br><span class="hfo-muted">'+(full!=null?(low<full?'Some drew with '+low:'Everyone drew at '+full):'Not everyone drew at any level; some drew with '+ptsTxt(low))+tg+'</span>'+(res==S.res?'<br><span class="hfo-muted">You ('+ptsTxt(S.pts)+'): </span>'+pill(mine):'')+'</td>'}
+function coMissing(hs){if(S.st!='co')return '';var have={};hs.forEach(function(h){var p=h.id.split('-');if(p.length==5&&(p[1]=='M'||p[1]=='E'))have[p[3]+'-'+p[4]]=1});
+  var std=[['O1-A','Archery'],['O1-M','Muzzleloader'],['O1-R','1st Rifle'],['O2-R','2nd Rifle'],['O3-R','3rd Rifle'],['O4-R','4th Rifle']];
+  var miss=std.filter(function(x){return !have[x[0]]&&!(x[0]=='O1-R'&&have['E1-R'])}).map(function(x){return x[1]});if(!miss.length)return '';
+  var animal=S.sp=='elk'?'bull':'buck';
+  return '<div class="hfo-note"><b>Not in the draw for '+animal+'s here: '+esc(miss.join(', '))+'.</b> '+(S.sp=='elk'?'In Colorado, seasons missing from the draw are usually over-the-counter bull tags (no points needed, just buy one) where the unit allows it, or the season isn\'t offered for bulls in this unit. ':'Colorado deer tags are all limited, so these seasons aren\'t offered for bucks in this unit. ')+'Check <a href="https://cpw.state.co.us/hunting/big-game/'+S.sp+'" target="_blank" rel="noopener">CPW\'s '+S.sp+' page and big game brochure</a> to confirm.</div>'}
+function seasonKey(h){if(S.st!='co')return 0;var p=h.id.split('-');var sx={M:0,E:1,F:2}[p[1]];var se=p[3]||'';var o=se=='E1'?0:/^O/.test(se)?(p[4]=='A'?1:p[4]=='M'?2:2+(+se[1])):/^[WLV]/.test(se)?8:/^P/.test(se)?9:10;return (sx==null?3:sx)*100+o*10+(+se.slice(1)||0)/10}
 function shortName(h,u){var n=h.name||'';if(n.indexOf(u)==0)n=n.slice(u.length).replace(/^[\s,:|—-]+/,'');return n||h.id}
 function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('div');el.className='hfo-panel hfo-unitpanel';el.id='hfo-unit';var c=document.querySelector('.hfo-controls');c.parentNode.insertBefore(el,c.nextSibling)}
   var data=cache[S.st],nm=stateName(S.st),spn=(SPN[S.sp]||S.sp).toLowerCase();
@@ -175,8 +181,9 @@ function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('di
   var pointsSys=gains(data);
   var h='<h3>'+(pointsSys?'How many points does a unit take?':'What are the odds in a unit?')+'</h3><p class="hfo-muted">Pick a '+esc(nm)+' '+spn+' unit or area to see '+(pointsSys?'how many points it took to draw each hunt there last year, for residents and nonresidents.':'last year\'s draw odds for each hunt there. '+esc(nm)+' has no preference points, so everyone has the same chance.')+'</p>';
   h+='<div class="hfo-combo"><input type="search" id="hfo-uq" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="hfo-ulist" placeholder="Type a unit, e.g. '+esc(units.length?units[Math.min(5,units.length-1)][0]:'')+'" value="'+esc(S.unit||S.uq)+'"><ul id="hfo-ulist" role="listbox" hidden></ul></div>';
-  if(S.unit){var hs=data.hunts.filter(function(x){return x.sp==S.sp&&unitOf(x,S.st)==S.unit});
+  if(S.unit){var hs=data.hunts.filter(function(x){return x.sp==S.sp&&unitOf(x,S.st)==S.unit});hs.sort(function(a,b){return seasonKey(a)-seasonKey(b)});
     h+='<div class="hfo-unithead"><b>'+esc(S.unit)+'</b> · '+hs.length+' '+spn+' hunt'+(hs.length==1?'':'s')+' · '+esc(data.year)+' results</div>';
+    h+=coMissing(hs);
     h+='<div class="hfo-tablewrap"><table class="hfo-unittable"><thead><tr><th>Hunt</th><th'+(S.res=='res'?' class="hfo-mycol"':'')+'>Residents'+(pointsSys?' need':'')+'</th><th'+(S.res=='nr'?' class="hfo-mycol"':'')+'>Nonresidents'+(pointsSys?' need':'')+'</th></tr></thead><tbody>';
     hs.forEach(function(x){h+='<tr class="hfo-row" data-i="'+esc(x.id)+'"><td><b>'+esc(x.id)+'</b><br><span class="hfo-muted">'+esc(shortName(x,S.unit))+'</span></td>'+needCell(x,data,'res',pointsSys)+needCell(x,data,'nr',pointsSys)+'</tr>'});
     h+='</tbody></table></div><p class="hfo-muted" style="margin-top:10px">'+(pointsSys?'"Points needed" is the fewest points where everyone who applied drew last year. "Some drew with" is the lowest point level that got lucky'+(/bonus/.test(data.system||'')?' (in a bonus-point state, extra points only add chances)':'')+'. Expect point creep to push these up a bit each year. ':'')+'Click a hunt for the full breakdown.</p>'}
