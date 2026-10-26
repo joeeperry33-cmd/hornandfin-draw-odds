@@ -158,11 +158,14 @@ function ptsTxt(n){return n+' pt'+(n==1?'':'s')}
 function needCell(h,data,res,pointsSys){var k=primaryFor(h,data,res);if(!k)return '<td class="hfo-nd">'+(res=='nr'?'Resident only':'—')+'</td>';
   var rows=rowsFor(h,k,data),q=h.q||{},tags=q[k]!=null?q[k]:null;
   if(!pointsSys){var o=oddsAt(h,k,data,0);return '<td>'+pill(o)+(tags!=null?'<br><span class="hfo-muted">'+tags+' tag'+(tags==1?'':'s')+'</span>':'')+'</td>'}
+  var tg=tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'';
+  if(rows.length&&rows.every(function(r){return r[0]==null})){var A=rows.reduce(function(a,r){return a+(r[1]||0)},0),D=rows.reduce(function(a,r){return r[2]==null?a:a+(r[2]||0)},0),known=rows.some(function(r){return r[2]!=null});
+    return known&&A?'<td>'+pill(Math.min(1,D/A))+'<br><span class="hfo-muted">'+D+' of '+A+' drew; no point breakdown published</span></td>':'<td class="hfo-nd">'+A+' applied; results by points not published</td>'}
   var full=fullAt(rows),low=lowestDrew(rows),apps=rows.reduce(function(a,r){return a+(r[1]||0)},0),dr=rows.reduce(function(a,r){return a+(r[2]||0)},0);
-  if(apps&&dr>=apps-0.5)return '<td><b class="hfo-need">0 pts</b><br><span class="hfo-muted">Everyone drew'+(tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'')+'</span></td>';
+  if(apps&&dr>=apps-0.5)return '<td><b class="hfo-need">0 pts</b><br><span class="hfo-muted">Everyone drew'+tg+'</span></td>';
   if(low==null)return '<td><b class="hfo-need">Nobody drew</b><br><span class="hfo-muted">'+(tags===0?'No tags for this group':apps+' applied')+'</span></td>';
   var mine=oddsAt(h,k,data,S.pts);
-  return '<td><b class="hfo-need">'+(full!=null?ptsTxt(full):low+'+ pts')+'</b><br><span class="hfo-muted">'+(full!=null?(low<full?'Some drew with '+low:'Everyone drew at '+full):'Lowest who drew had '+low+'; nobody was guaranteed')+(tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'')+'</span>'+(res==S.res?'<br><span class="hfo-muted">You ('+ptsTxt(S.pts)+'): </span>'+pill(mine):'')+'</td>'}
+  return '<td><b class="hfo-need">'+(full!=null?ptsTxt(full):'No sure thing')+'</b><br><span class="hfo-muted">'+(full!=null?(low<full?'Some drew with '+low:'Everyone drew at '+full):'Not everyone drew at any level; some drew with '+ptsTxt(low))+tg+'</span>'+(res==S.res?'<br><span class="hfo-muted">You ('+ptsTxt(S.pts)+'): </span>'+pill(mine):'')+'</td>'}
 function shortName(h,u){var n=h.name||'';if(n.indexOf(u)==0)n=n.slice(u.length).replace(/^[\s,:|—-]+/,'');return n||h.id}
 function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('div');el.className='hfo-panel hfo-unitpanel';el.id='hfo-unit';var c=document.querySelector('.hfo-controls');c.parentNode.insertBefore(el,c.nextSibling)}
   var data=cache[S.st],nm=stateName(S.st),spn=(SPN[S.sp]||S.sp).toLowerCase();
