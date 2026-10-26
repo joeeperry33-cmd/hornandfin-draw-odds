@@ -154,6 +154,7 @@ function unitOf(h,st){var n=h.name||'';if(!n)return 'Hunt '+h.id;var m;
 function natKey(u){return u.replace(/\d+/g,function(d){return ('00000'+d).slice(-5)}).toLowerCase()}
 function unitList(data){var m={};data.hunts.forEach(function(h){if(h.sp!=S.sp)return;var u=unitOf(h,S.st);m[u]=(m[u]||0)+1});return Object.keys(m).sort(function(a,b){return natKey(a)<natKey(b)?-1:1}).map(function(u){return [u,m[u]]})}
 function primaryFor(h,data,res){var ks=[];(RESPOOLS[res]||[]).forEach(function(k){if(h[k]&&h[k].length&&k.indexOf('youth')<0&&k!='landowner')ks.push(k)});if(!ks.length&&h.all&&h.all.length)ks.push('all');return ks[0]||null}
+function ptsTxt(n){return n+' pt'+(n==1?'':'s')}
 function needCell(h,data,res,pointsSys){var k=primaryFor(h,data,res);if(!k)return '<td class="hfo-nd">'+(res=='nr'?'Resident only':'—')+'</td>';
   var rows=rowsFor(h,k,data),q=h.q||{},tags=q[k]!=null?q[k]:null;
   if(!pointsSys){var o=oddsAt(h,k,data,0);return '<td>'+pill(o)+(tags!=null?'<br><span class="hfo-muted">'+tags+' tag'+(tags==1?'':'s')+'</span>':'')+'</td>'}
@@ -161,7 +162,7 @@ function needCell(h,data,res,pointsSys){var k=primaryFor(h,data,res);if(!k)retur
   if(apps&&dr>=apps-0.5)return '<td><b class="hfo-need">0 pts</b><br><span class="hfo-muted">Everyone drew'+(tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'')+'</span></td>';
   if(low==null)return '<td><b class="hfo-need">Nobody drew</b><br><span class="hfo-muted">'+(tags===0?'No tags for this group':apps+' applied')+'</span></td>';
   var mine=oddsAt(h,k,data,S.pts);
-  return '<td><b class="hfo-need">'+(full!=null?full+' pts':low+'+ pts')+'</b><br><span class="hfo-muted">'+(full!=null?(low<full?'Some drew with '+low:'Everyone drew at '+full):'Lowest who drew had '+low+'; nobody was guaranteed')+(tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'')+'</span>'+(res==S.res?'<br><span class="hfo-muted">You ('+S.pts+' pts): </span>'+pill(mine):'')+'</td>'}
+  return '<td><b class="hfo-need">'+(full!=null?ptsTxt(full):low+'+ pts')+'</b><br><span class="hfo-muted">'+(full!=null?(low<full?'Some drew with '+low:'Everyone drew at '+full):'Lowest who drew had '+low+'; nobody was guaranteed')+(tags!=null?' · '+tags+' tag'+(tags==1?'':'s'):'')+'</span>'+(res==S.res?'<br><span class="hfo-muted">You ('+ptsTxt(S.pts)+'): </span>'+pill(mine):'')+'</td>'}
 function shortName(h,u){var n=h.name||'';if(n.indexOf(u)==0)n=n.slice(u.length).replace(/^[\s,:|—-]+/,'');return n||h.id}
 function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('div');el.className='hfo-panel hfo-unitpanel';el.id='hfo-unit';var c=document.querySelector('.hfo-controls');c.parentNode.insertBefore(el,c.nextSibling)}
   var data=cache[S.st],nm=stateName(S.st),spn=(SPN[S.sp]||S.sp).toLowerCase();
