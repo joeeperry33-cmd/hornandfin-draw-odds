@@ -1,7 +1,9 @@
 (function(){
 var BASE=(window.HFO_BASE||'https://cdn.jsdelivr.net/gh/joeeperry33-cmd/hornandfin-draw-odds@main/');
-var STATES=[['co','Colorado'],['wy','Wyoming'],['mt','Montana'],['id','Idaho'],['nm','New Mexico'],['az','Arizona'],['ut','Utah'],['nv','Nevada'],['or','Oregon'],['wa','Washington'],['ca','California'],['ak','Alaska']];
-var SPN={elk:'Elk',deer:'Deer',moose:'Moose',caribou:'Caribou',sheep:'Dall sheep',goat:'Mountain goat',bison:'Bison',brown_bear:'Brown bear'};
+var STATES=[['al','Alabama'],['ak','Alaska'],['az','Arizona'],['ar','Arkansas'],['ca','California'],['co','Colorado'],['ct','Connecticut'],['de','Delaware'],['fl','Florida'],['ga','Georgia'],['hi','Hawaii'],['id','Idaho'],['il','Illinois'],['in','Indiana'],['ia','Iowa'],['ks','Kansas'],['ky','Kentucky'],['la','Louisiana'],['me','Maine'],['md','Maryland'],['ma','Massachusetts'],['mi','Michigan'],['mn','Minnesota'],['ms','Mississippi'],['mo','Missouri'],['mt','Montana'],['ne','Nebraska'],['nv','Nevada'],['nh','New Hampshire'],['nj','New Jersey'],['nm','New Mexico'],['ny','New York'],['nc','North Carolina'],['nd','North Dakota'],['oh','Ohio'],['ok','Oklahoma'],['or','Oregon'],['pa','Pennsylvania'],['ri','Rhode Island'],['sc','South Carolina'],['sd','South Dakota'],['tn','Tennessee'],['tx','Texas'],['ut','Utah'],['vt','Vermont'],['va','Virginia'],['wa','Washington'],['wv','West Virginia'],['wi','Wisconsin'],['wy','Wyoming']];
+var SPN={elk:'Elk',deer:'Deer',antelope:'Pronghorn',moose:'Moose',caribou:'Caribou',sheep:'Bighorn sheep',goat:'Mountain goat',bison:'Bison',bear:'Black bear',brown_bear:'Brown bear'};
+function spName(k){return (S.st=='ak'&&k=='sheep')?'Dall sheep':(spName(k))}
+var SPORDER=['elk','deer','antelope','moose','sheep','goat','bison','bear','brown_bear','caribou'];
 var POOLS={res:'Residents',nr:'Nonresidents',all:'All applicants',nr_special:'Nonresidents (special price)',nr_rand:'Nonresidents (random draw)',nr_special_rand:'Nonresidents (special price, random draw)',out:'Outfitter pool (resident or nonresident with an outfitter)',youth_res:'Youth residents',youth_nr:'Youth nonresidents',landowner:'Landowners'};
 var RESPOOLS={res:['res','youth_res','landowner'],nr:['nr','nr_special','nr_rand','nr_special_rand','out','youth_nr']};
 var $=function(id){return document.getElementById(id)};
@@ -44,21 +46,23 @@ function gains(data,h){var s=(h&&h.system)||(data&&data.system);return !!s&&s!='
 function primary(h,data){var ks=poolsFor(h,data);return ks.length?ks[0]:null}
 // ---------- render ----------
 function renderControls(){var st=$('hfo-st');if(!st.options.length){STATES.forEach(function(s){st.add(new Option(s[1],s[0]))})}st.value=S.st;
-  var r=rules&&rules[S.st],sps=r?Object.keys(r.species):['elk','deer'];var data=cache[S.st];
+  var r=rules&&rules[S.st],sps=r?Object.keys(r.species).sort(function(a,b){return SPORDER.indexOf(a)-SPORDER.indexOf(b)}):['elk','deer'];var data=cache[S.st];
   if(data&&data.hunts){data.hunts.forEach(function(h){if(sps.indexOf(h.sp)<0)sps.push(h.sp)})}
-  if(sps.indexOf(S.sp)<0){if(r)S.sp=sps[0];else sps.unshift(S.sp)}var sp=$('hfo-sp');sp.innerHTML='';sps.forEach(function(k){sp.add(new Option(SPN[k]||k,k))});sp.value=S.sp;
+  if(sps.indexOf(S.sp)<0){if(r)S.sp=sps[0];else sps.unshift(S.sp)}var sp=$('hfo-sp');sp.innerHTML='';sps.forEach(function(k){sp.add(new Option(spName(k),k))});sp.value=S.sp;
   [].forEach.call($('hfo-res').querySelectorAll('button'),function(b){b.setAttribute('aria-pressed',b.dataset.v==S.res?'true':'false')});$('hfo-pts').value=S.pts}
 function renderRules(){var el=$('hfo-rules'),r=rules&&rules[S.st];if(!r){el.innerHTML='<p class="hfo-muted">Loading the rules…</p>';return}
   var v=r.species[S.sp];var nm=stateName(S.st);
-  if(!v){el.innerHTML='<h3>'+esc(nm)+' '+esc(SPN[S.sp]||S.sp)+'</h3><p>See our <a href="/hunting-guides/'+esc(r.page_slug)+'/">'+esc(nm)+' draw guide</a>.</p>';return}
+  if(!v){el.innerHTML='<h3>'+esc(nm)+' '+esc(spName(S.sp))+'</h3>'+(r.page_slug?'<p>See our <a href="/hunting-guides/'+esc(r.page_slug)+'/">'+esc(nm)+' draw guide</a>.</p>':'')+(r.otc?'<p>'+esc(r.otc)+'</p>':'');return}
+  if(v.system=='none'){el.innerHTML='<h3>'+esc(nm)+' '+esc(spName(S.sp).toLowerCase())+': no draw needed</h3><p>'+esc(v.system_summary||'Tags are sold over the counter; no points or drawing.')+'</p>'+(r.otc?'<p class="hfo-muted">'+esc(r.otc)+'</p>':'')+srcList(v);return}
   var who=S.res=='res'?v.resident||{}:v.nonresident||{};
-  var h='<h3>How '+esc(nm)+' '+esc((SPN[S.sp]||S.sp).toLowerCase())+' draws work</h3><p>'+esc(v.system_summary)+'</p>';
+  var h='<h3>How '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' draws work</h3><p>'+esc(v.system_summary)+'</p>';
   if(v.allocation&&v.allocation.length){h+='<ul>'+v.allocation.map(function(a){return '<li>'+(a.pct!=null?'<b>'+a.pct+'%</b> — ':'')+esc(a.pool)+'</li>'}).join('')+'</ul>'}
   h+='<div class="hfo-facts"><div class="hfo-fact"><b>'+(S.res=='res'?'Resident':'Nonresident')+' cost to apply</b>'+(who.point_only_fee!=null&&who.point_only_fee!==who.application_fee?'Point: '+money(who.point_only_fee)+'<br>':'')+(who.application_fee!=null?'Application: '+money(who.application_fee):(who.point_only_fee!=null?'Point: '+money(who.point_only_fee):'—'))+'</div>'+
      '<div class="hfo-fact"><b>Nonresident share</b>'+esc(v.nonresident_quota||'—')+'</div>'+
      '<div class="hfo-fact"><b>You lose points if</b>'+esc(v.lose_points_if||'—')+'</div></div>';
   if(v.waiting_period&&!/^none/i.test(v.waiting_period))h+='<p class="hfo-muted"><b>Waiting period:</b> '+esc(v.waiting_period)+'</p>';
-  h+='<p><a class="hfo-btn alt" href="/hunting-guides/'+esc(r.page_slug)+'/">Full '+esc(nm)+' points guide</a></p>';el.innerHTML=h}
+  if(r.page_slug)h+='<p><a class="hfo-btn alt" href="/hunting-guides/'+esc(r.page_slug)+'/">Full '+esc(nm)+' points guide</a></p>';else h+=srcList(v);el.innerHTML=h}
+function srcList(v){var L=(v&&v.sources)||[];return L.length?'<p class="hfo-muted">Source: '+L.slice(0,2).map(function(x){return '<a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.label)+'</a>'}).join(', ')+'</p>':''}
 function weaponOf(n){n=n||'';if(/archery|\bbow|bowhunt/i.test(n))return 'archery';if(/muzzle/i.test(n))return 'muzzle';if(/rifle|any legal|\balw\b|any weapon|centerfire/i.test(n))return 'rifle';return 'other'}
 function huntRows(data){var hs=data.hunts.filter(function(h){return h.sp==S.sp&&(S.weapon=='all'||weaponOf(h.name)==S.weapon)});var out=[];
   hs.forEach(function(h){var k=primary(h,data);if(!k)return;var rows=rowsFor(h,k,data);
@@ -73,7 +77,7 @@ function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.s
   if(S.onlyMine)list=list.filter(function(x){return x.odds!=null&&x.odds>=0.75});
   var key=S.sort,d=S.dir;list.sort(function(a,b){var A=a[key],B=b[key];if(key=='id'){A=a.h.id;B=b.h.id;return A<B?-d:A>B?d:0}if(A==null)A=-1;if(B==null)B=-1;return (A-B)*d});
   var pointsSys=gains(data);
-  var h='<h3>Every '+esc(nm)+' '+esc((SPN[S.sp]||S.sp).toLowerCase())+' hunt</h3><p class="hfo-muted">'+esc(data.year)+' draw results from '+srcLinks(data)+'. '+esc(data.about||'')+'</p>';
+  var h='<h3>Every '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' hunt</h3><p class="hfo-muted">'+esc(data.year)+' draw results from '+srcLinks(data)+'. '+esc(data.about||'')+'</p>';
   (data.notes||[]).forEach(function(n){h+='<div class="hfo-note">'+esc(n)+'</div>'});
   h+='<div class="hfo-searchrow"><input type="search" id="hfo-q" placeholder="Search hunt code, unit or area" value="'+esc(S.q)+'"><label class="hfo-check"><input type="checkbox" id="hfo-mine" '+(S.onlyMine?'checked':'')+'> Only hunts I\'d likely draw (75%+)</label></div>';
   h+='<div class="hfo-tablewrap"><table><thead><tr><th data-k="id">Hunt</th><th data-k="tags">Tags</th><th data-k="apps" class="hfo-x">Applicants</th><th data-k="odds">'+(pointsSys?'Odds at '+S.pts+' pts':'Draw odds')+'</th>'+(pointsSys?'<th data-k="full" class="hfo-x">Everyone drew at</th><th data-k="low" class="hfo-x">Lowest drew</th>':'')+'</tr></thead><tbody>';
@@ -90,7 +94,9 @@ function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.s
 function srcLinks(data){var other=S.sp=='elk'?/deer/i:S.sp=='deer'?/elk/i:/^$/;var L=(data.sources||[]).filter(function(s){return !/api|endpoint/i.test(s.label)});var M=L.filter(function(s){return !other.test(s.label)});return (M.length?M:L).slice(0,2).map(function(s){return '<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a>'}).join(', ')||'the state wildlife agency'}
 function tierPanel(v,nm,data){var h='<h3>What it usually takes</h3>';
   if(S.st=='wa')h+='<div class="hfo-note">Washington hasn\'t published hunt-by-hunt drawing results since 2021, so we can\'t show unit odds. The ranges below are general guidance.</div>';
-  else h+='<div class="hfo-note">Unit-by-unit results for '+esc(nm)+' '+esc((SPN[S.sp]||S.sp).toLowerCase())+' aren\'t loaded yet. The ranges below are general guidance.</div>';
+  else if(v&&v.system=='none')return '<h3>No draw for '+esc(spName(S.sp).toLowerCase())+' in '+esc(nm)+'</h3><p>'+esc(v.system_summary||'')+'</p>';
+  else if(!(v&&v.tiers&&v.tiers.length))return '<h3>Hunt-by-hunt results</h3><div class="hfo-note">'+esc(nm)+' doesn\'t publish '+esc(spName(S.sp).toLowerCase())+' draw results by hunt and point level, so we can\'t show unit odds. The rules above explain how the draw works.</div>';
+  else h+='<div class="hfo-note">Unit-by-unit results for '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' aren\'t loaded yet. The ranges below are general guidance.</div>';
   var t=(v&&v.tiers)||[];if(!t.length)return h+'<p>See the full guide for details.</p>';
   var hasPts=t.some(function(x){return x.typical_points_resident||x.typical_points_nonresident});
   h+='<div class="hfo-tablewrap"><table><thead><tr><th>Hunt type</th><th>Examples</th>'+(hasPts?'<th>Residents</th><th>Nonresidents</th>':'')+'<th>What to expect</th></tr></thead><tbody>';
@@ -122,7 +128,7 @@ function demand(x){return x.tags?x.apps/x.tags:0}
 function bestSort(a,b,pointsSys){if(pointsSys){var A=a.full!=null?a.full:(a.low!=null?a.low:0),B=b.full!=null?b.full:(b.low!=null?b.low:0);if(A!=B)return B-A}else if(Math.abs(b.odds-a.odds)>0.001)return b.odds-a.odds;return (b.tags||0)-(a.tags||0)||b.apps-a.apps}
 function renderBest(){var el=$('hfo-best');if(!el){el=document.createElement('div');el.className='hfo-panel';el.id='hfo-best';$('hfo-detail').parentNode.insertBefore(el,$('hfo-detail'))}
   var data=cache[S.st];if(!data||!data.hunts||!data.hunts.some(function(h){return h.sp==S.sp})){el.hidden=true;return}el.hidden=false;
-  var pointsSys=gains(data),nm=stateName(S.st),spn=(SPN[S.sp]||S.sp).toLowerCase(),who=S.res=='res'?'resident':'nonresident';
+  var pointsSys=gains(data),nm=stateName(S.st),spn=(spName(S.sp)).toLowerCase(),who=S.res=='res'?'resident':'nonresident';
   var all=huntRows(data).filter(function(x){return x.odds!=null});
   function solid(x){return !pointsSys||x.full==null||x.full<=S.pts||(x.n!=null&&x.n>=5)}
   var likely=all.filter(function(x){return x.odds>=0.75&&solid(x)}),good=all.filter(function(x){return x.odds>=0.4&&solid(x)&&!(x.odds>=0.75)});
@@ -174,7 +180,7 @@ function coMissing(hs){if(S.st!='co')return '';var have={};hs.forEach(function(h
 function seasonKey(h){if(S.st!='co')return 0;var p=h.id.split('-');var sx={M:0,E:1,F:2}[p[1]];var se=p[3]||'';var o=se=='E1'?0:/^O/.test(se)?(p[4]=='A'?1:p[4]=='M'?2:2+(+se[1])):/^[WLV]/.test(se)?8:/^P/.test(se)?9:10;return (sx==null?3:sx)*100+o*10+(+se.slice(1)||0)/10}
 function shortName(h,u){var n=h.name||'';if(n.indexOf(u)==0)n=n.slice(u.length).replace(/^[\s,:|—-]+/,'');return n||h.id}
 function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('div');el.className='hfo-panel hfo-unitpanel';el.id='hfo-unit';var c=document.querySelector('.hfo-controls');c.parentNode.insertBefore(el,c.nextSibling)}
-  var data=cache[S.st],nm=stateName(S.st),spn=(SPN[S.sp]||S.sp).toLowerCase();
+  var data=cache[S.st],nm=stateName(S.st),spn=(spName(S.sp)).toLowerCase();
   if(data===undefined){el.innerHTML='<h3>Points needed by unit</h3><p class="hfo-muted">Loading…</p>';return}
   if(!data||!data.hunts||!data.hunts.some(function(h){return h.sp==S.sp})){el.hidden=true;return}el.hidden=false;
   var units=unitList(data);if(S.unit&&!units.some(function(u){return u[0]==S.unit}))S.unit='';
