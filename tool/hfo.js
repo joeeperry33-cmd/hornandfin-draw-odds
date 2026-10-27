@@ -188,7 +188,7 @@ function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('di
   if(!data||!data.hunts||!data.hunts.some(function(h){return h.sp==S.sp})){el.hidden=true;return}el.hidden=false;
   var units=unitList(data);if(S.unit&&!units.some(function(u){return u[0]==S.unit}))S.unit='';
   var pointsSys=gains(data);
-  var h='<h3>'+(pointsSys?'How many points does a unit take?':'What are the odds in a unit?')+'</h3><p class="hfo-muted">Pick a '+esc(nm)+' '+spn+' unit or area to see '+(pointsSys?'how many points it took to draw each hunt there last year, for residents and nonresidents.':'last year\'s draw odds for each hunt there. '+esc(nm)+' has no preference points, so everyone has the same chance.')+'</p>';
+  var h='<h3>'+(pointsSys?'How many points does a unit take?':'What are the odds in a unit?')+'</h3><p class="hfo-muted">Pick a unit or area to see '+esc(nm)+' '+spn+' results: '+(pointsSys?'how many points it took to draw each hunt there last year, for residents and nonresidents.':'last year\'s draw odds for each hunt there. '+esc(nm)+' has no preference points, so everyone has the same chance.')+'</p>';
   h+='<div class="hfo-combo"><input type="search" id="hfo-uq" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="hfo-ulist" placeholder="Type a unit, e.g. '+esc(units.length?units[Math.min(5,units.length-1)][0]:'')+'" value="'+esc(S.unit||S.uq)+'"><ul id="hfo-ulist" role="listbox" hidden></ul></div>';
   if(S.unit){var hs=data.hunts.filter(function(x){return x.sp==S.sp&&unitOf(x,S.st)==S.unit});hs.sort(function(a,b){return seasonKey(a)-seasonKey(b)});
     h+='<div class="hfo-unithead"><b>'+esc(S.unit)+'</b> · '+hs.length+' '+spn+' hunt'+(hs.length==1?'':'s')+' · '+esc(data.year)+' results</div>';
