@@ -62,7 +62,7 @@ function renderRules(){var el=$('hfo-rules'),r=rules&&rules[S.st];if(!r){el.inne
      '<div class="hfo-fact"><b>You lose points if</b>'+esc(v.lose_points_if||'—')+'</div></div>';
   if(v.waiting_period&&!/^none/i.test(v.waiting_period))h+='<p class="hfo-muted"><b>Waiting period:</b> '+esc(v.waiting_period)+'</p>';
   if(r.page_slug)h+='<p><a class="hfo-btn alt" href="/hunting-guides/'+esc(r.page_slug)+'/">Full '+esc(nm)+' points guide</a></p>';else h+=srcList(v);el.innerHTML=h}
-function srcList(v){var L=(v&&v.sources)||[];return L.length?'<p class="hfo-muted">Source: '+L.slice(0,2).map(function(x){return '<a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.label)+'</a>'}).join(', ')+'</p>':''}
+function srcList(v){var L=(v&&v.sources)||[];return L.length?'<p class="hfo-muted">Source: '+L.slice(0,2).map(function(x){var u=typeof x=='string'?x:x.url,l=typeof x=='string'?x.replace(/^https?:\/\/(www\.)?/,'').split('/')[0]:x.label;return '<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(l)+'</a>'}).join(', ')+'</p>':''}
 function weaponOf(n){n=n||'';if(/archery|\bbow|bowhunt/i.test(n))return 'archery';if(/muzzle/i.test(n))return 'muzzle';if(/rifle|any legal|\balw\b|any weapon|centerfire/i.test(n))return 'rifle';return 'other'}
 function huntRows(data){var hs=data.hunts.filter(function(h){return h.sp==S.sp&&(S.weapon=='all'||weaponOf(h.name)==S.weapon)});var out=[];
   hs.forEach(function(h){var k=primary(h,data);if(!k)return;var rows=rowsFor(h,k,data);
