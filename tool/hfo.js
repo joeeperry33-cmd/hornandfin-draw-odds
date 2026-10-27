@@ -174,7 +174,7 @@ function needCell(h,data,res,pointsSys){var k=primaryFor(h,data,res);if(!k)retur
   if(low==null)return '<td><b class="hfo-need">Nobody drew</b><br><span class="hfo-muted">'+(tags===0?'No tags for this group':apps+' applied')+'</span></td>';
   var mine=oddsAt(h,k,data,S.pts);
   return '<td><b class="hfo-need">'+(full!=null?ptsTxt(full):'No sure thing')+'</b><br><span class="hfo-muted">'+(full!=null?(low<full?'Some drew with '+low:'Everyone drew at '+full):'Not everyone drew at any level; some drew with '+ptsTxt(low))+tg+'</span>'+(res==S.res?'<br><span class="hfo-muted">You ('+ptsTxt(S.pts)+'): </span>'+pill(mine):'')+'</td>'}
-function coMissing(hs){if(S.st!='co')return '';var have={};hs.forEach(function(h){var p=h.id.split('-');if(p.length==5&&(p[1]=='M'||p[1]=='E'))have[p[3]+'-'+p[4]]=1});
+function coMissing(hs){if(S.st!='co'||(S.sp!='elk'&&S.sp!='deer'))return '';var have={};hs.forEach(function(h){var p=h.id.split('-');if(p.length==5&&(p[1]=='M'||p[1]=='E'))have[p[3]+'-'+p[4]]=1});
   var std=[['O1-A','Archery'],['O1-M','Muzzleloader'],['O1-R','1st Rifle'],['O2-R','2nd Rifle'],['O3-R','3rd Rifle'],['O4-R','4th Rifle']];
   var miss=std.filter(function(x){return !have[x[0]]&&!(x[0]=='O1-R'&&have['E1-R'])}).map(function(x){return x[1]});if(!miss.length)return '';
   var animal=S.sp=='elk'?'bull':'buck';
