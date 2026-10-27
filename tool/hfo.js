@@ -83,11 +83,13 @@ function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.s
   h+='<div class="hfo-tablewrap"><table><thead><tr><th data-k="id">Hunt</th><th data-k="tags">Tags</th><th data-k="apps" class="hfo-x">Applicants</th><th data-k="odds">'+(pointsSys?'Odds at '+S.pts+' pts':'Draw odds')+'</th>'+(pointsSys?'<th data-k="full" class="hfo-x">Everyone drew at</th><th data-k="low" class="hfo-x">Lowest drew</th>':'')+'</tr></thead><tbody>';
   list.slice(0,S.limit).forEach(function(x,i){h+='<tr class="hfo-row" data-i="'+esc(x.h.id)+'"><td><b>'+esc(x.h.id)+'</b><br><span class="hfo-muted">'+esc(x.h.name)+'</span></td><td>'+(x.tags==null?'—':x.tags)+'</td><td class="hfo-x">'+x.apps+'</td><td>'+pill(x.odds)+'</td>'+(pointsSys?'<td class="hfo-x">'+(x.full==null?'Not everyone':x.full+' pts')+'</td><td class="hfo-x">'+(x.low==null?'—':x.low+' pts')+'</td>':'')+'</tr>'});
   h+='</tbody></table></div>';
-  if(!list.length)h+='<p>No hunts match.</p>';
+  if(!list.length){var other=S.res=='res'?'nr':'res',saved=S.res;S.res=other;var n2=huntRows(data).length;S.res=saved;
+    h+=(n2&&!S.q&&!S.onlyMine)?'<p>'+esc(nm)+' '+esc(spName(S.sp).toLowerCase())+' has no '+(S.res=='nr'?'nonresident':'resident')+' draw results. <button class="hfo-btn alt" type="button" id="hfo-swap">Show '+(other=='res'?'resident':'nonresident')+' results ('+n2+' hunts)</button></p>':'<p>No hunts match.</p>'}
   h+='<p class="hfo-muted" style="margin-top:10px">Showing '+Math.min(S.limit,list.length)+' of '+list.length+' hunts. '+(list.length>S.limit?'<button class="hfo-btn alt" id="hfo-more" type="button">Show more</button>':'')+'</p>';
   el.innerHTML=h;
   $('hfo-q').addEventListener('input',function(e){S.q=e.target.value;S.limit=50;var pos=e.target.selectionStart;renderHunts();var q=$('hfo-q');q.focus();q.setSelectionRange(pos,pos)});
   $('hfo-mine').addEventListener('change',function(e){S.onlyMine=e.target.checked;renderHunts()});
+  if($('hfo-swap'))$('hfo-swap').addEventListener('click',function(){S.res=S.res=='res'?'nr':'res';all()});
   if($('hfo-more'))$('hfo-more').addEventListener('click',function(){S.limit+=100;renderHunts()});
   [].forEach.call(el.querySelectorAll('th[data-k]'),function(th){th.addEventListener('click',function(){var k=th.dataset.k;if(S.sort==k)S.dir*=-1;else{S.sort=k;S.dir=k=='id'?1:-1}renderHunts()})});
   [].forEach.call(el.querySelectorAll('tr.hfo-row'),function(tr){tr.addEventListener('click',function(){S.hunt=tr.dataset.i;renderDetail();$('hfo-detail').scrollIntoView({behavior:'smooth',block:'start'})})})}
@@ -96,7 +98,7 @@ function tierPanel(v,nm,data){var h='<h3>What it usually takes</h3>';
   if(S.st=='wa')h+='<div class="hfo-note">Washington hasn\'t published hunt-by-hunt drawing results since 2021, so we can\'t show unit odds. The ranges below are general guidance.</div>';
   else if(v&&v.system=='none')return '<h3>No draw for '+esc(spName(S.sp).toLowerCase())+' in '+esc(nm)+'</h3><p>'+esc(v.system_summary||'')+'</p>';
   else if(!(v&&v.tiers&&v.tiers.length))return '<h3>Hunt-by-hunt results</h3><div class="hfo-note">'+esc(nm)+' doesn\'t publish '+esc(spName(S.sp).toLowerCase())+' draw results by hunt and point level, so we can\'t show unit odds. The rules above explain how the draw works.</div>';
-  else h+='<div class="hfo-note">Unit-by-unit results for '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' aren\'t loaded yet. The ranges below are general guidance.</div>';
+  else h+='<div class="hfo-note">'+(data&&data.hunts&&data.hunts.length?'Hunt-by-hunt results for '+esc(nm)+' '+esc(spName(S.sp).toLowerCase())+' aren\'t available.':esc(nm)+' doesn\'t publish '+esc(spName(S.sp).toLowerCase())+' draw results by hunt.')+' The guidance below is general.</div>';
   var t=(v&&v.tiers)||[];if(!t.length)return h+'<p>See the full guide for details.</p>';
   var hasPts=t.some(function(x){return x.typical_points_resident||x.typical_points_nonresident});
   h+='<div class="hfo-tablewrap"><table><thead><tr><th>Hunt type</th><th>Examples</th>'+(hasPts?'<th>Residents</th><th>Nonresidents</th>':'')+'<th>What to expect</th></tr></thead><tbody>';
