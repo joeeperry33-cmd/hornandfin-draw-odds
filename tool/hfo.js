@@ -156,6 +156,7 @@ function renderBest(){var el=$('hfo-best');if(!el){el=document.createElement('di
 function renderUnitKeep(){if(S.unit)renderUnit()}
 function unitOf(h,st){var n=h.name||'';if(!n)return 'Hunt '+h.id;var m;
   if(st=='ut')return n.split(' — ')[0].trim();
+  if(st=='az'){m=n.match(/^(.*?), (Buck|Any|Antler|Bull|Cow|Desert|Rocky|Designated|Doe|Either|Spike|Yearling|Female|Male|Pronghorn)/);if(m)return m[1].replace(/;/g,',')}
   if(st=='nv'){m=n.match(/^(Units? .*?), (Elk|Mule Deer|Deer|Antelope|Pronghorn|Bighorn|Mountain|Desert|California|Rocky)/);return m?m[1]:n.split(',')[0]}
   if(st=='ca'){m=n.match(/^(Zone [A-Z0-9-]+|[A-Z]{1,2}-?\d+[A-Z]?)\b/);if(m)return m[1];return n.split(/ Period| - | Late| Early| Archery| Either| Buck| Bull| Antlerless| General| Apprentice| Muzzle| Hunt/)[0].trim()}
   var u=n.split(/,| \| |: | — /)[0].trim();if(st=='or'){m=u.match(/^(.*?\bUnits?)\b/);if(m)u=m[1]}return u}
