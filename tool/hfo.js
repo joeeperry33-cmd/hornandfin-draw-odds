@@ -1,9 +1,9 @@
 (function(){
 var BASE=(window.HFO_BASE||'https://cdn.jsdelivr.net/gh/joeeperry33-cmd/hornandfin-draw-odds@main/');
 var STATES=[['al','Alabama'],['ak','Alaska'],['az','Arizona'],['ar','Arkansas'],['ca','California'],['co','Colorado'],['ct','Connecticut'],['de','Delaware'],['fl','Florida'],['ga','Georgia'],['hi','Hawaii'],['id','Idaho'],['il','Illinois'],['in','Indiana'],['ia','Iowa'],['ks','Kansas'],['ky','Kentucky'],['la','Louisiana'],['me','Maine'],['md','Maryland'],['ma','Massachusetts'],['mi','Michigan'],['mn','Minnesota'],['ms','Mississippi'],['mo','Missouri'],['mt','Montana'],['ne','Nebraska'],['nv','Nevada'],['nh','New Hampshire'],['nj','New Jersey'],['nm','New Mexico'],['ny','New York'],['nc','North Carolina'],['nd','North Dakota'],['oh','Ohio'],['ok','Oklahoma'],['or','Oregon'],['pa','Pennsylvania'],['ri','Rhode Island'],['sc','South Carolina'],['sd','South Dakota'],['tn','Tennessee'],['tx','Texas'],['ut','Utah'],['vt','Vermont'],['va','Virginia'],['wa','Washington'],['wv','West Virginia'],['wi','Wisconsin'],['wy','Wyoming']];
-var SPN={elk:'Elk',deer:'Deer',antelope:'Pronghorn',moose:'Moose',caribou:'Caribou',sheep:'Bighorn sheep',goat:'Mountain goat',bison:'Bison',bear:'Black bear',brown_bear:'Brown bear'};
+var SPN={elk:'Elk',deer:'Deer',antelope:'Pronghorn',moose:'Moose',caribou:'Caribou',sheep:'Bighorn sheep',goat:'Mountain goat',bison:'Bison',bear:'Black bear',brown_bear:'Brown bear',turkey:'Turkey',crane:'Sandhill crane',swan:'Tundra swan',sage_grouse:'Sage-grouse',sharptail:'Sharp-tailed grouse',alligator:'Alligator',paddlefish:'Paddlefish',sturgeon:'Lake sturgeon'};
 function spName(k){return (S.st=='ak'&&k=='sheep')?'Dall sheep':(SPN[k]||k)}
-var SPORDER=['elk','deer','antelope','moose','sheep','goat','bison','bear','brown_bear','caribou'];
+var SPORDER=['elk','deer','antelope','moose','sheep','goat','bison','bear','brown_bear','caribou','turkey','crane','swan','sage_grouse','sharptail','alligator','paddlefish','sturgeon'];
 var POOLS={res:'Residents',nr:'Nonresidents',all:'All applicants',nr_special:'Nonresidents (special price)',nr_rand:'Nonresidents (random draw)',nr_special_rand:'Nonresidents (special price, random draw)',out:'Outfitter pool (resident or nonresident with an outfitter)',youth_res:'Youth residents',youth_nr:'Youth nonresidents',landowner:'Landowners'};
 var RESPOOLS={res:['res','youth_res','landowner'],nr:['nr','nr_special','nr_rand','nr_special_rand','out','youth_nr']};
 var $=function(id){return document.getElementById(id)};
@@ -77,8 +77,8 @@ function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.s
   if(S.onlyMine)list=list.filter(function(x){return x.odds!=null&&x.odds>=0.75});
   var key=S.sort,d=S.dir;list.sort(function(a,b){var A=a[key],B=b[key];if(key=='id'){A=a.h.id;B=b.h.id;return A<B?-d:A>B?d:0}if(A==null)A=-1;if(B==null)B=-1;return (A-B)*d});
   var pointsSys=gains(data);
-  var h='<h3>Every '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' hunt</h3><p class="hfo-muted">'+esc(data.year)+' draw results from '+srcLinks(data)+'. '+esc((S.sp=='elk'||S.sp=='deer'||S.st=='ak')?(data.about||''):'')+'</p>';
-  (data.notes||[]).forEach(function(n){h+='<div class="hfo-note">'+esc(n)+'</div>'});
+  var h='<h3>Every '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' hunt</h3><p class="hfo-muted">'+esc(spYear(data))+' draw results from '+srcLinks(data)+'. '+esc((S.sp=='elk'||S.sp=='deer'||S.st=='ak')?(data.about||''):'')+'</p>';
+  spNotes(data).forEach(function(n){h+='<div class="hfo-note">'+esc(n)+'</div>'});
   h+='<div class="hfo-searchrow"><input type="search" id="hfo-q" placeholder="Search hunt code, unit or area" value="'+esc(S.q)+'"><label class="hfo-check"><input type="checkbox" id="hfo-mine" '+(S.onlyMine?'checked':'')+'> Only hunts I\'d likely draw (75%+)</label></div>';
   h+='<div class="hfo-tablewrap"><table><thead><tr><th data-k="id">Hunt</th><th data-k="tags">Tags</th><th data-k="apps" class="hfo-x">Applicants</th><th data-k="odds">'+(pointsSys?'Odds at '+S.pts+' pts':'Draw odds')+'</th>'+(pointsSys?'<th data-k="full" class="hfo-x">Everyone drew at</th><th data-k="low" class="hfo-x">Lowest drew</th>':'')+'</tr></thead><tbody>';
   list.slice(0,S.limit).forEach(function(x,i){h+='<tr class="hfo-row" data-i="'+esc(x.h.id)+'"><td><b>'+esc(x.h.id)+'</b><br><span class="hfo-muted">'+esc(x.h.name)+'</span></td><td>'+(x.tags==null?'—':x.tags)+'</td><td class="hfo-x">'+x.apps+'</td><td>'+pill(x.odds)+'</td>'+(pointsSys?'<td class="hfo-x">'+(x.full==null?'Not everyone':x.full+' pts')+'</td><td class="hfo-x">'+(x.low==null?'—':x.low+' pts')+'</td>':'')+'</tr>'});
@@ -93,11 +93,12 @@ function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.s
   if($('hfo-more'))$('hfo-more').addEventListener('click',function(){S.limit+=100;renderHunts()});
   [].forEach.call(el.querySelectorAll('th[data-k]'),function(th){th.addEventListener('click',function(){var k=th.dataset.k;if(S.sort==k)S.dir*=-1;else{S.sort=k;S.dir=k=='id'?1:-1}renderHunts()})});
   [].forEach.call(el.querySelectorAll('tr.hfo-row'),function(tr){tr.addEventListener('click',function(){S.hunt=tr.dataset.i;renderDetail();$('hfo-detail').scrollIntoView({behavior:'smooth',block:'start'})})})}
-function srcLinks(data){var KW={elk:/elk/i,deer:/deer|buck/i,antelope:/prong|antelope/i,moose:/moose/i,sheep:/sheep|bighorn/i,goat:/goat/i,bison:/bison/i,bear:/bear/i,brown_bear:/bear/i,caribou:/caribou/i};var L=(data.sources||[]).filter(function(s){return !/api|endpoint/i.test(s.label)});var re=KW[S.sp];var M=re?L.filter(function(s){return re.test(s.label)}):[];if(!M.length){var other=/elk|deer|buck|prong|antelope|moose|sheep|bighorn|goat|bison|bear|caribou/i;M=L.filter(function(s){return !other.test(s.label)})}return (M.length?M:L).slice(0,2).map(function(s){return '<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a>'}).join(', ')||'the state wildlife agency'}
+function srcLinks(data){var KW={elk:/elk/i,deer:/deer|buck/i,antelope:/prong|antelope/i,moose:/moose/i,sheep:/sheep|bighorn/i,goat:/goat/i,bison:/bison/i,bear:/bear/i,brown_bear:/bear/i,caribou:/caribou/i,crane:/crane/i,swan:/swan/i,sage_grouse:/grouse/i,sharptail:/grouse/i,alligator:/alligator/i,paddlefish:/paddlefish/i,sturgeon:/sturgeon/i,turkey:/turkey/i};var L=(data.sources||[]).filter(function(s){return !/api|endpoint/i.test(s.label)});var re=KW[S.sp];var M=re?L.filter(function(s){return re.test(s.label)}):[];if(!M.length){var other=/elk|deer|buck|prong|antelope|moose|sheep|bighorn|goat|bison|bear|caribou/i;M=L.filter(function(s){return !other.test(s.label)})}return (M.length?M:L).slice(0,2).map(function(s){return '<a href="'+esc(s.url)+'" target="_blank" rel="noopener">'+esc(s.label)+'</a>'}).join(', ')||'the state wildlife agency'}
 function tierPanel(v,nm,data){var h='<h3>What it usually takes</h3>';
   if(S.st=='wa')h+='<div class="hfo-note">Washington hasn\'t published hunt-by-hunt drawing results since 2021, so we can\'t show unit odds. The ranges below are general guidance.</div>';
   else if(v&&v.system=='none')return '<h3>No draw for '+esc(spName(S.sp).toLowerCase())+' in '+esc(nm)+'</h3><p>'+esc(v.system_summary||'')+'</p>';
   else if(!(v&&v.tiers&&v.tiers.length))return '<h3>Hunt-by-hunt results</h3><div class="hfo-note">'+esc(nm)+' doesn\'t publish '+esc(spName(S.sp).toLowerCase())+' draw results by hunt and point level, so we can\'t show unit odds. The rules above explain how the draw works.</div>';
+  else if(v.tiers_note)h+='<div class="hfo-note">'+esc(v.tiers_note)+'</div>';
   else h+='<div class="hfo-note">'+(data&&data.hunts&&data.hunts.length?'Hunt-by-hunt results for '+esc(nm)+' '+esc(spName(S.sp).toLowerCase())+' aren\'t available.':esc(nm)+' doesn\'t publish '+esc(spName(S.sp).toLowerCase())+' draw results by hunt.')+' The guidance below is general.</div>';
   var t=(v&&v.tiers)||[];if(!t.length)return h+'<p>See the full guide for details.</p>';
   var hasPts=t.some(function(x){return x.typical_points_resident||x.typical_points_nonresident});
@@ -191,7 +192,7 @@ function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('di
   var h='<h3>'+(pointsSys?'How many points does a unit take?':'What are the odds in a unit?')+'</h3><p class="hfo-muted">Pick a unit or area to see '+esc(nm)+' '+spn+' results: '+(pointsSys?'how many points it took to draw each hunt there last year, for residents and nonresidents.':'last year\'s draw odds for each hunt there. '+esc(nm)+' has no preference points, so everyone has the same chance.')+'</p>';
   h+='<div class="hfo-combo"><input type="search" id="hfo-uq" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="hfo-ulist" placeholder="Type a unit, e.g. '+esc(units.length?units[Math.min(5,units.length-1)][0]:'')+'" value="'+esc(S.unit||S.uq)+'"><ul id="hfo-ulist" role="listbox" hidden></ul></div>';
   if(S.unit){var hs=data.hunts.filter(function(x){return x.sp==S.sp&&unitOf(x,S.st)==S.unit});hs.sort(function(a,b){return seasonKey(a)-seasonKey(b)});
-    h+='<div class="hfo-unithead"><b>'+esc(S.unit)+'</b> · '+hs.length+' '+spn+' hunt'+(hs.length==1?'':'s')+' · '+esc(data.year)+' results</div>';
+    h+='<div class="hfo-unithead"><b>'+esc(S.unit)+'</b> · '+hs.length+' '+spn+' hunt'+(hs.length==1?'':'s')+' · '+esc(spYear(data))+' results</div>';
     h+=coMissing(hs);
     h+='<div class="hfo-tablewrap"><table class="hfo-unittable"><thead><tr><th>Hunt</th><th'+(S.res=='res'?' class="hfo-mycol"':'')+'>Residents'+(pointsSys?' need':'')+'</th><th'+(S.res=='nr'?' class="hfo-mycol"':'')+'>Nonresidents'+(pointsSys?' need':'')+'</th></tr></thead><tbody>';
     hs.forEach(function(x){h+='<tr class="hfo-row" data-i="'+esc(x.id)+'"><td><b>'+esc(x.id)+'</b><br><span class="hfo-muted">'+esc(shortName(x,S.unit))+'</span></td>'+needCell(x,data,'res',pointsSys)+needCell(x,data,'nr',pointsSys)+'</tr>'});
@@ -209,8 +210,23 @@ function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('di
   ul.addEventListener('mousedown',function(e){var t=e.target.closest('li[data-u]');if(t){e.preventDefault();pick(t.dataset.u)}});
   inp.addEventListener('blur',function(){setTimeout(function(){ul.hidden=true;inp.setAttribute('aria-expanded','false')},150)});
   [].forEach.call(el.querySelectorAll('tr.hfo-row'),function(tr){tr.addEventListener('click',function(){S.hunt=tr.dataset.i;renderDetail();$('hfo-detail').scrollIntoView({behavior:'smooth',block:'start'})})})}
-function all(){renderControls();renderUnit();renderRules();renderBest();renderHunts();renderDetail()}
-function go(){loadRules().then(function(){return loadState(S.st)}).then(all,all)}
+var NEWSP=['turkey','crane','swan','sage_grouse','sharptail','alligator','paddlefish','sturgeon'];
+function spNotes(data){return (data.sp_notes&&data.sp_notes[S.sp])||(NEWSP.indexOf(S.sp)<0?(data.notes||[]):[])}
+function spYear(data){var h=data.hunts&&data.hunts.filter(function(x){return x.sp==S.sp&&x.year})[0];return h?h.year:data.year}
+// ---------- no-points lotteries ----------
+var lots=null;
+function renderLottery(){var el=$('hfo-lottery');if(!el){el=document.createElement('div');el.className='hfo-panel';el.id='hfo-lottery';var d=$('hfo-detail');d.parentNode.insertBefore(el,d.nextSibling)}
+  if(lots===null){el.innerHTML='<h3>Lottery draws: no points needed</h3><p class="hfo-muted">Loading…</p>';return}
+  if(!lots||!lots.draws){el.hidden=true;return}el.hidden=false;
+  var L=lots.draws.slice().sort(function(a,b){return (b.st==S.st)-(a.st==S.st)});
+  var h='<h3>Lottery draws: no points needed</h3><p class="hfo-muted">'+esc(lots.intro)+'</p><div class="hfo-tablewrap"><table><thead><tr><th>Draw</th><th>Tags</th><th class="hfo-x">Applicants</th><th>Odds</th><th class="hfo-x">5-year chance</th></tr></thead><tbody>';
+  L.forEach(function(x){var p=(x.tags&&x.apps)?Math.min(1,x.tags/x.apps):null,five=p==null?null:1-Math.pow(1-p,5);
+    h+='<tr'+(x.st==S.st?' class="hfo-me"':'')+'><td><b>'+esc(x.name)+'</b><br><span class="hfo-muted">'+esc(x.how)+'</span><br><span class="hfo-muted"><b>Apply:</b> '+esc(x.window)+'. <b>Cost:</b> '+esc(x.cost)+'. <a href="'+esc(x.url)+'" target="_blank" rel="noopener">State page</a></span></td><td>'+esc(x.tags_txt)+'</td><td class="hfo-x">'+esc(x.apps_txt)+(x.year&&x.apps?'<br><span class="hfo-muted">'+esc(x.year)+'</span>':'')+'</td><td>'+(p==null?'<span class="hfo-muted">Not published</span>':pill(p)+(x.odds_note?'<br><span class="hfo-muted">'+esc(x.odds_note)+'</span>':''))+'</td><td class="hfo-x">'+(five==null?'—':pct(five))+'</td></tr>'});
+  h+='</tbody></table></div><p class="hfo-muted" style="margin-top:10px">Points-based draws for crane, swan, grouse, alligator, paddlefish and sturgeon are in the tool above: pick the state, then the species. Updated '+esc(lots.updated)+'.</p>';
+  el.innerHTML=h}
+function loadLots(){if(lots!==null)return;getJSON(BASE+'data/lotteries.json').then(function(j){lots=j;renderLottery()}).catch(function(){lots=false;renderLottery()})}
+function all(){renderControls();renderUnit();renderRules();renderBest();renderHunts();renderDetail();renderLottery()}
+function go(){loadLots();loadRules().then(function(){return loadState(S.st)}).then(all,all)}
 // ---------- events ----------
 $('hfo-st').addEventListener('change',function(e){S.st=e.target.value;S.hunt=null;S.unit='';S.uq='';S.q='';S.limit=50;S.weapon='all';all();go()});
 $('hfo-sp').addEventListener('change',function(e){S.sp=e.target.value;S.hunt=null;S.unit='';S.uq='';S.limit=50;S.weapon='all';all()});
