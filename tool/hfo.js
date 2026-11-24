@@ -216,13 +216,12 @@ function spYear(data){var h=data.hunts&&data.hunts.filter(function(x){return x.s
 // ---------- no-points lotteries ----------
 var lots=null;
 function renderLottery(){var el=$('hfo-lottery');if(!el){el=document.createElement('div');el.className='hfo-panel';el.id='hfo-lottery';var d=$('hfo-detail');d.parentNode.insertBefore(el,d.nextSibling)}
-  if(lots===null){el.innerHTML='<h3>Lottery draws: no points needed</h3><p class="hfo-muted">Loading…</p>';return}
-  if(!lots||!lots.draws){el.hidden=true;return}el.hidden=false;
-  var L=lots.draws.slice().sort(function(a,b){return (b.st==S.st)-(a.st==S.st)});
-  var h='<h3>Lottery draws: no points needed</h3><p class="hfo-muted">'+esc(lots.intro)+'</p><div class="hfo-tablewrap"><table><thead><tr><th>Draw</th><th>Tags</th><th class="hfo-x">Applicants</th><th>Odds</th><th class="hfo-x">5-year chance</th></tr></thead><tbody>';
+  if(lots===null){el.hidden=true;return}
+  var L=(lots&&lots.draws||[]).filter(function(x){return x.st==S.st});if(!L.length){el.hidden=true;return}el.hidden=false;
+  var h='<h3>'+esc(stateName(S.st))+' lottery draws: no points needed</h3><p class="hfo-muted">'+esc(lots.intro)+'</p><div class="hfo-tablewrap"><table><thead><tr><th>Draw</th><th>Tags</th><th class="hfo-x">Applicants</th><th>Odds</th><th class="hfo-x">5-year chance</th></tr></thead><tbody>';
   L.forEach(function(x){var p=(x.tags&&x.apps)?Math.min(1,x.tags/x.apps):null,five=p==null?null:1-Math.pow(1-p,5);
-    h+='<tr'+(x.st==S.st?' class="hfo-me"':'')+'><td><b>'+esc(x.name)+'</b><br><span class="hfo-muted">'+esc(x.how)+'</span><br><span class="hfo-muted"><b>Apply:</b> '+esc(x.window)+'. <b>Cost:</b> '+esc(x.cost)+'. <a href="'+esc(x.url)+'" target="_blank" rel="noopener">State page</a></span></td><td>'+esc(x.tags_txt)+'</td><td class="hfo-x">'+esc(x.apps_txt)+(x.year&&x.apps?'<br><span class="hfo-muted">'+esc(x.year)+'</span>':'')+'</td><td>'+(p==null?'<span class="hfo-muted">Not published</span>':pill(p)+(x.odds_note?'<br><span class="hfo-muted">'+esc(x.odds_note)+'</span>':''))+'</td><td class="hfo-x">'+(five==null?'—':pct(five))+'</td></tr>'});
-  h+='</tbody></table></div><p class="hfo-muted" style="margin-top:10px">Points-based draws for crane, swan, grouse, alligator, paddlefish and sturgeon are in the tool above: pick the state, then the species. Updated '+esc(lots.updated)+'.</p>';
+    h+='<tr><td><b>'+esc(x.name)+'</b><br><span class="hfo-muted">'+esc(x.how)+'</span><br><span class="hfo-muted"><b>Apply:</b> '+esc(x.window)+'. <b>Cost:</b> '+esc(x.cost)+'. <a href="'+esc(x.url)+'" target="_blank" rel="noopener">State page</a></span></td><td>'+esc(x.tags_txt)+'</td><td class="hfo-x">'+esc(x.apps_txt)+(x.year&&x.apps?'<br><span class="hfo-muted">'+esc(x.year)+'</span>':'')+'</td><td>'+(p==null?'<span class="hfo-muted">Not published</span>':pill(p)+(x.odds_note?'<br><span class="hfo-muted">'+esc(x.odds_note)+'</span>':''))+'</td><td class="hfo-x">'+(five==null?'—':pct(five))+'</td></tr>'});
+  h+='</tbody></table></div><p class="hfo-muted" style="margin-top:10px">Updated '+esc(lots.updated)+'.</p>';
   el.innerHTML=h}
 function loadLots(){if(lots!==null)return;getJSON(BASE+'data/lotteries.json').then(function(j){lots=j;renderLottery()}).catch(function(){lots=false;renderLottery()})}
 function all(){renderControls();renderUnit();renderRules();renderBest();renderHunts();renderDetail();renderLottery()}
