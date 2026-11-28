@@ -1,10 +1,10 @@
-name: Rebuild state hub summaries
-# The state hub pages on hornandfin.com load small summary files from data/hub/.
+name: Rebuild hub and national summaries
+# The state hub pages load data/hub/, and the national Compare hunts page loads data/national/.
 # Rebuild them whenever draw or harvest data changes, then clear the CDN cache.
 on:
   push:
     branches: [main]
-    paths: ['data/*.json', 'data/harvest/**', 'scripts/hub/**']
+    paths: ['data/*.json', 'data/harvest/**', 'scripts/hub/**', 'scripts/national/**', 'tool/hfo.js']
   workflow_dispatch:
 permissions:
   contents: write
@@ -16,16 +16,18 @@ jobs:
       - uses: actions/checkout@v4
         with: { ref: main }
       - name: Build
-        run: python3 scripts/hub/build.py
+        run: |
+          python3 scripts/hub/build.py
+          node scripts/national/build.js
       - name: Commit and purge
         run: |
-          git add -N data/hub
-          if git diff --quiet -- data/hub; then echo "No change"; exit 0; fi
+          git add -N data/hub data/national
+          if git diff --quiet -- data/hub data/national; then echo "No change"; exit 0; fi
           git config user.name "hub-build"
           git config user.email "actions@users.noreply.github.com"
-          git add data/hub
-          git commit -m "Rebuild state hub summaries"
+          git add data/hub data/national
+          git commit -m "Rebuild hub and national summaries"
           git push
-          for f in $(git diff --name-only HEAD~1 HEAD -- data/hub); do
+          for f in $(git diff --name-only HEAD~1 HEAD -- data/hub data/national); do
             curl -fsS "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/$f" >/dev/null || echo "purge failed for $f"
           done

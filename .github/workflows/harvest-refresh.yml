@@ -23,14 +23,16 @@ jobs:
         continue-on-error: true
         run: python3 scripts/harvest/refresh.py wy ut id or | tee refresh.log
       - name: Rebuild state hub summaries
-        run: python3 scripts/hub/build.py
+        run: |
+          python3 scripts/hub/build.py
+          node scripts/national/build.js
       - name: Commit changes
         id: commit
         run: |
-          if git diff --quiet -- data/harvest data/hub; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
+          if git diff --quiet -- data/harvest data/hub data/national; then echo "changed=false" >> "$GITHUB_OUTPUT"; exit 0; fi
           git config user.name "harvest-refresh"
           git config user.email "actions@users.noreply.github.com"
-          git add data/harvest data/hub
+          git add data/harvest data/hub data/national
           git commit -m "Refresh hunter success from state harvest reports"
           git push
           echo "changed=true" >> "$GITHUB_OUTPUT"

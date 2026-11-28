@@ -34,3 +34,11 @@ harvest refresh rebuilds them too. `tool/hub.js` renders the lists on the state 
 <div class="hf-hub-best" data-state="co" data-species="elk,deer,antelope,bear"></div>
 <script src="https://cdn.jsdelivr.net/gh/joeeperry33-cmd/hornandfin-draw-odds@main/tool/hub.js" defer></script>
 ```
+
+## National Compare hunts page
+
+`data/national/<species>.json` lists every hunt in every state with the odds of drawing at point levels
+0 to 30 (residents and nonresidents), applicants, tags, hunter success and flags (weapon, private land).
+`scripts/national/build.js` builds it using the odds math copied at build time from `tool/hfo.js`, so the
+compare page and the draw odds tool always agree. `tool/compare.js` renders the page (`<div id="hf-compare">`).
+Both summaries are rebuilt by `hub-build.yml` and by the harvest refresh.
