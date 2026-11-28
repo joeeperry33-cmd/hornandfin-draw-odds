@@ -1,0 +1,352 @@
+{
+"al": {
+"motto": "Audemus jura nostra defendere",
+"motto_en": "We dare defend our rights",
+"animal": "American black bear",
+"bird": "Yellowhammer (northern flicker)",
+"fish": "Largemouth bass"
+},
+"ak": {
+"motto": "North to the Future",
+"motto_en": null,
+"animal": "Moose",
+"bird": "Willow ptarmigan",
+"fish": "King salmon"
+},
+"az": {
+"motto": "Ditat Deus",
+"motto_en": "God enriches",
+"animal": "Ringtail",
+"bird": "Cactus wren",
+"fish": "Apache trout"
+},
+"ar": {
+"motto": "Regnat populus",
+"motto_en": "The people rule",
+"animal": "White-tailed deer",
+"bird": "Northern mockingbird",
+"fish": "Alligator gar"
+},
+"ca": {
+"motto": "Eureka",
+"motto_en": "I have found it",
+"animal": "California grizzly bear",
+"bird": "California quail",
+"fish": "Golden trout"
+},
+"co": {
+"motto": "Nil sine numine",
+"motto_en": "Nothing without providence",
+"animal": "Rocky Mountain bighorn sheep",
+"bird": "Lark bunting",
+"fish": "Greenback cutthroat trout"
+},
+"ct": {
+"motto": "Qui transtulit sustinet",
+"motto_en": "He who transplanted still sustains",
+"animal": "Sperm whale",
+"bird": "American robin",
+"fish": "American shad"
+},
+"de": {
+"motto": "Liberty and Independence",
+"motto_en": null,
+"animal": "Gray fox",
+"bird": "Blue Hen Chicken",
+"fish": "Weakfish"
+},
+"fl": {
+"motto": "In God We Trust",
+"motto_en": null,
+"animal": "Florida panther",
+"bird": "Northern mockingbird",
+"fish": "Florida largemouth bass"
+},
+"ga": {
+"motto": null,
+"motto_en": null,
+"animal": "White-tailed deer",
+"bird": "Brown thrasher",
+"fish": "Largemouth bass"
+},
+"hi": {
+"motto": "Ua mau ke ea o ka ʻāina i ka pono",
+"motto_en": "The life of the land is perpetuated in righteousness",
+"animal": "Hawaiian monk seal",
+"bird": "Nene (Hawaiian goose)",
+"fish": "Humuhumunukunukuāpuaʻa (reef triggerfish)"
+},
+"id": {
+"motto": "Esto perpetua",
+"motto_en": "Let it be perpetual",
+"animal": null,
+"bird": "Mountain bluebird",
+"fish": "Cutthroat trout"
+},
+"il": {
+"motto": "State sovereignty, national union",
+"motto_en": null,
+"animal": "White-tailed deer",
+"bird": "Northern cardinal",
+"fish": "Bluegill"
+},
+"in": {
+"motto": "Crossroads of America",
+"motto_en": null,
+"animal": null,
+"bird": "Northern cardinal",
+"fish": null
+},
+"ia": {
+"motto": "Our liberties we prize and our rights we will maintain",
+"motto_en": null,
+"animal": null,
+"bird": "Eastern goldfinch",
+"fish": null
+},
+"ks": {
+"motto": "Ad astra per aspera",
+"motto_en": "To the stars through difficulties",
+"animal": "American bison",
+"bird": "Western meadowlark",
+"fish": "Channel catfish"
+},
+"ky": {
+"motto": "United we stand, divided we fall",
+"motto_en": null,
+"animal": "Gray squirrel",
+"bird": "Northern cardinal",
+"fish": "Kentucky spotted bass"
+},
+"la": {
+"motto": "Union, justice, confidence",
+"motto_en": null,
+"animal": "Black bear",
+"bird": "Brown pelican",
+"fish": "White crappie"
+},
+"me": {
+"motto": "Dirigo",
+"motto_en": "I lead",
+"animal": "Moose",
+"bird": "Chickadee",
+"fish": "Landlocked Atlantic salmon"
+},
+"md": {
+"motto": "Fatti maschi, parole femine",
+"motto_en": "Strong deeds, gentle words",
+"animal": null,
+"bird": "Baltimore oriole",
+"fish": "Rockfish (striped bass)"
+},
+"ma": {
+"motto": "Ense petit placidam sub libertate quietem",
+"motto_en": "By the sword we seek peace, but peace only under liberty",
+"animal": "Right whale",
+"bird": "Black-capped chickadee",
+"fish": "Cod"
+},
+"mi": {
+"motto": "Si quaeris peninsulam amoenam circumspice",
+"motto_en": "If you seek a pleasant peninsula, look about you",
+"animal": "White-tailed deer",
+"bird": "American robin",
+"fish": "Brook trout"
+},
+"mn": {
+"motto": "L'Étoile du Nord",
+"motto_en": "The star of the North",
+"animal": null,
+"bird": "Common loon",
+"fish": "Walleye"
+},
+"ms": {
+"motto": "Virtute et armis",
+"motto_en": "By valor and arms",
+"animal": "White-tailed deer",
+"bird": "Northern mockingbird",
+"fish": "Largemouth bass"
+},
+"mo": {
+"motto": "Salus populi suprema lex esto",
+"motto_en": "Let the welfare of the people be the supreme law",
+"animal": "Missouri mule",
+"bird": "Eastern bluebird",
+"fish": "Channel catfish"
+},
+"mt": {
+"motto": "Oro y plata",
+"motto_en": "Gold and silver",
+"animal": "Grizzly bear",
+"bird": "Western meadowlark",
+"fish": "Blackspotted cutthroat trout"
+},
+"ne": {
+"motto": "Equality before the law",
+"motto_en": null,
+"animal": "White-tailed deer",
+"bird": "Western meadowlark",
+"fish": "Channel catfish"
+},
+"nv": {
+"motto": "All For Our Country",
+"motto_en": null,
+"animal": "Desert bighorn sheep",
+"bird": "Mountain bluebird",
+"fish": "Lahontan cutthroat trout"
+},
+"nh": {
+"motto": "Live Free or Die",
+"motto_en": null,
+"animal": "White-tailed deer",
+"bird": "Purple finch",
+"fish": "Brook trout"
+},
+"nj": {
+"motto": "Liberty and prosperity",
+"motto_en": null,
+"animal": null,
+"bird": "Eastern goldfinch",
+"fish": "Brook trout"
+},
+"nm": {
+"motto": "Crescit eundo",
+"motto_en": "It grows as it goes",
+"animal": "American black bear",
+"bird": "Greater roadrunner",
+"fish": "Rio Grande cutthroat trout"
+},
+"ny": {
+"motto": "Excelsior",
+"motto_en": "Ever upward",
+"animal": "Beaver",
+"bird": "Eastern bluebird",
+"fish": "Brook trout"
+},
+"nc": {
+"motto": "Esse quam videri",
+"motto_en": "To be, rather than to seem",
+"animal": "Eastern gray squirrel",
+"bird": "Northern cardinal",
+"fish": "Southern Appalachian brook trout"
+},
+"nd": {
+"motto": "Liberty and union, now and forever, one and inseparable",
+"motto_en": null,
+"animal": null,
+"bird": "Western meadowlark",
+"fish": "Northern pike"
+},
+"oh": {
+"motto": "With God, all things are possible",
+"motto_en": null,
+"animal": "White-tailed deer",
+"bird": "Northern cardinal",
+"fish": null
+},
+"ok": {
+"motto": "Labor omnia vincit",
+"motto_en": "Labor conquers all things",
+"animal": "Buffalo",
+"bird": "Scissor-tailed flycatcher",
+"fish": "White bass"
+},
+"or": {
+"motto": "Alis volat propriis",
+"motto_en": "She flies with her own wings",
+"animal": "Beaver",
+"bird": null,
+"fish": "Chinook salmon"
+},
+"pa": {
+"motto": "Virtue, liberty, and independence",
+"motto_en": null,
+"animal": "White-tailed deer",
+"bird": null,
+"fish": "Brook trout"
+},
+"ri": {
+"motto": "Hope",
+"motto_en": null,
+"animal": "Harbor seal",
+"bird": "Rhode Island Red",
+"fish": "Striped bass"
+},
+"sc": {
+"motto": "Dum spiro spero",
+"motto_en": "While I breathe, I hope",
+"animal": "White-tailed deer",
+"bird": "Carolina wren",
+"fish": "Striped bass"
+},
+"sd": {
+"motto": "Under God the people rule",
+"motto_en": null,
+"animal": "Coyote",
+"bird": "Ring-necked pheasant",
+"fish": "Walleye"
+},
+"tn": {
+"motto": "Agriculture and Commerce",
+"motto_en": null,
+"animal": "Raccoon",
+"bird": "Northern mockingbird",
+"fish": "Smallmouth bass"
+},
+"tx": {
+"motto": "Friendship",
+"motto_en": null,
+"animal": "Texas Longhorn",
+"bird": "Northern mockingbird",
+"fish": "Guadalupe bass"
+},
+"ut": {
+"motto": "Industry",
+"motto_en": null,
+"animal": "Rocky Mountain elk",
+"bird": "California gull",
+"fish": "Bonneville cutthroat trout"
+},
+"vt": {
+"motto": "Freedom and Unity",
+"motto_en": null,
+"animal": null,
+"bird": "Hermit thrush",
+"fish": "Brook trout"
+},
+"va": {
+"motto": "Sic semper tyrannis",
+"motto_en": "Thus always to tyrants",
+"animal": "Virginia big-eared bat",
+"bird": "Northern cardinal",
+"fish": "Brook trout"
+},
+"wa": {
+"motto": null,
+"motto_en": null,
+"animal": "Olympic marmot",
+"bird": "American goldfinch",
+"fish": "Steelhead trout"
+},
+"wv": {
+"motto": "Montani semper liberi",
+"motto_en": "Mountaineers are always free",
+"animal": "American black bear",
+"bird": "Northern cardinal",
+"fish": "Brook trout"
+},
+"wi": {
+"motto": "Forward",
+"motto_en": null,
+"animal": "American badger",
+"bird": "American robin",
+"fish": "Muskellunge"
+},
+"wy": {
+"motto": "Equal Rights",
+"motto_en": null,
+"animal": "American bison",
+"bird": "Western meadowlark",
+"fish": "Cutthroat trout"
+}
+}

@@ -1,0 +1,665 @@
+{
+ "wa": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Washington Deer Hunting: The Complete Guide to Blacktail, Mule Deer and Whitetail",
+    "url": "/washington-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for Washington Deer Special Permits (Step by Step)",
+      "url": "/washington-deer-hunting/how-to-apply-for-washington-deer-special-permits/"
+     },
+     {
+      "title": "Washington General Season Deer Tags: How Over-the-Counter Tags Work",
+      "url": "/washington-deer-hunting/washington-general-season-deer-tags/"
+     },
+     {
+      "title": "Washington Deer Season Dates 2026 (Blacktail, Mule Deer and Whitetail)",
+      "url": "/washington-deer-hunting/washington-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a Washington Deer Hunt Cost?",
+      "url": "/washington-deer-hunting/washington-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY Deer Hunting in Washington: Which Is Right for You?",
+      "url": "/washington-deer-hunting/guided-vs-diy-deer-hunting-washington/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Washington Elk Hunting: The Complete Guide",
+    "url": "/washington-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for Washington Elk Special Permits (Step by Step)",
+      "url": "/washington-elk-hunting/how-to-apply-for-washington-elk-special-permits/"
+     },
+     {
+      "title": "Washington General Season Elk Tags: How Over-the-Counter Tags Work",
+      "url": "/washington-elk-hunting/washington-general-season-elk-tags/"
+     },
+     {
+      "title": "Washington Elk Season Dates 2026 (and How to Pick a Season)",
+      "url": "/washington-elk-hunting/washington-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does a Washington Elk Hunt Cost?",
+      "url": "/washington-elk-hunting/washington-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY vs. Drop Camp: Which Washington Elk Hunt Is Right for You?",
+      "url": "/washington-elk-hunting/guided-vs-diy-elk-hunting-washington/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Washington Special Permit Points Explained (Elk & Deer)",
+   "url": "/hunting-guides/washington-special-permit-points-explained/"
+  }
+ },
+ "az": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Arizona Deer Hunting: The Complete Guide",
+    "url": "/arizona-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Arizona Deer Draw (Step by Step)",
+      "url": "/arizona-deer-hunting/how-to-apply-for-the-arizona-deer-draw/"
+     },
+     {
+      "title": "Arizona OTC Archery Deer Tags: How They Work for 2026 and 2027",
+      "url": "/arizona-deer-hunting/arizona-otc-archery-deer-tags/"
+     },
+     {
+      "title": "Arizona Deer Season Dates 2026 (Coues Whitetail and Mule Deer)",
+      "url": "/arizona-deer-hunting/arizona-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does an Arizona Deer Hunt Cost?",
+      "url": "/arizona-deer-hunting/arizona-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY: Which Arizona Deer Hunt Is Right for You?",
+      "url": "/arizona-deer-hunting/guided-vs-diy-deer-hunting-arizona/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Arizona Elk Hunting: The Complete Guide",
+    "url": "/arizona-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Arizona Elk Draw (Step by Step)",
+      "url": "/arizona-elk-hunting/how-to-apply-for-the-arizona-elk-draw/"
+     },
+     {
+      "title": "Arizona Elk Tags Outside the Draw: Leftovers, Nonpermit Tags, and More",
+      "url": "/arizona-elk-hunting/arizona-elk-tags/"
+     },
+     {
+      "title": "Arizona Elk Season Dates 2026 (and How to Pick a Hunt)",
+      "url": "/arizona-elk-hunting/arizona-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does an Arizona Elk Hunt Cost?",
+      "url": "/arizona-elk-hunting/arizona-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY: Which Arizona Elk Hunt Is Right for You?",
+      "url": "/arizona-elk-hunting/guided-vs-diy-elk-hunting-arizona/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Arizona Bonus Points Explained (Elk & Deer)",
+   "url": "/hunting-guides/arizona-bonus-points-explained/"
+  }
+ },
+ "ak": {
+  "guides": [
+   {
+    "sp": "all",
+    "title": "Alaska Hunting: The Complete Guide to Moose, Caribou, Bear, Sheep and Deer",
+    "url": "/alaska-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for Alaska Drawing Permits (and When You Don’t Need To)",
+      "url": "/alaska-hunting/how-to-apply-for-alaska-drawing-permits/"
+     },
+     {
+      "title": "Alaska Nonresident Guide Requirement, Locking Tags and Harvest Tickets",
+      "url": "/alaska-hunting/alaska-nonresident-guide-requirement-and-tags/"
+     },
+     {
+      "title": "Alaska Hunting Seasons 2026–2027 by Species and Region",
+      "url": "/alaska-hunting/alaska-hunting-seasons/"
+     },
+     {
+      "title": "How Much Does an Alaska Hunt Cost?",
+      "url": "/alaska-hunting/alaska-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. Transporter Drop-Off vs. DIY: Which Alaska Hunt Is Right for You?",
+      "url": "/alaska-hunting/guided-vs-diy-hunting-alaska/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Alaska Drawing Permits Explained (No Points, Pure Lottery)",
+   "url": "/hunting-guides/alaska-drawing-permits-explained/"
+  }
+ },
+ "ut": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Utah Deer Hunting: The Complete Guide",
+    "url": "/utah-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Utah Deer Draw (Step by Step)",
+      "url": "/utah-deer-hunting/how-to-apply-for-the-utah-deer-draw/"
+     },
+     {
+      "title": "Utah General-Season Deer Permits: How to Get One",
+      "url": "/utah-deer-hunting/utah-general-season-deer-permits/"
+     },
+     {
+      "title": "Utah Deer Season Dates 2026 (and How to Pick a Season)",
+      "url": "/utah-deer-hunting/utah-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a Utah Deer Hunt Cost?",
+      "url": "/utah-deer-hunting/utah-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY: Which Utah Deer Hunt Is Right for You?",
+      "url": "/utah-deer-hunting/guided-vs-diy-deer-hunting-utah/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Utah Elk Hunting: The Complete Guide",
+    "url": "/utah-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Utah Limited-Entry Elk Draw (Step by Step)",
+      "url": "/utah-elk-hunting/how-to-apply-for-the-utah-elk-draw/"
+     },
+     {
+      "title": "Utah General-Season Elk Permits: Any-Bull, Spike, and Archery (OTC)",
+      "url": "/utah-elk-hunting/utah-general-season-elk-tags/"
+     },
+     {
+      "title": "Utah Elk Season Dates 2026 (and How to Pick a Season)",
+      "url": "/utah-elk-hunting/utah-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does a Utah Elk Hunt Cost?",
+      "url": "/utah-elk-hunting/utah-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY vs. CWMU: Which Utah Elk Hunt Is Right for You?",
+      "url": "/utah-elk-hunting/guided-vs-diy-elk-hunting-utah/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Utah Bonus and Preference Points Explained (Elk & Deer)",
+   "url": "/hunting-guides/utah-bonus-and-preference-points-explained/"
+  }
+ },
+ "id": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Idaho Deer Hunting: The Complete Guide",
+    "url": "/idaho-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for Idaho Deer Tags and Controlled Hunts (Step by Step)",
+      "url": "/idaho-deer-hunting/how-to-apply-for-the-idaho-deer-draw/"
+     },
+     {
+      "title": "Idaho General Deer Tags: Regular vs. White-tailed Explained",
+      "url": "/idaho-deer-hunting/idaho-general-deer-tags/"
+     },
+     {
+      "title": "Idaho Deer Season Dates 2026 (and How to Pick a Season)",
+      "url": "/idaho-deer-hunting/idaho-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does an Idaho Deer Hunt Cost?",
+      "url": "/idaho-deer-hunting/idaho-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY Deer Hunting in Idaho: Which Is Right for You?",
+      "url": "/idaho-deer-hunting/guided-vs-diy-deer-hunting-idaho/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Idaho Elk Hunting: The Complete Guide",
+    "url": "/idaho-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for Idaho Elk Tags and Controlled Hunts (Step by Step)",
+      "url": "/idaho-elk-hunting/how-to-apply-for-the-idaho-elk-draw/"
+     },
+     {
+      "title": "Idaho General Elk Tags: Zones, A and B Tags, and Caps Explained",
+      "url": "/idaho-elk-hunting/idaho-general-elk-tags/"
+     },
+     {
+      "title": "Idaho Elk Season Dates 2026 (and How to Pick a Season)",
+      "url": "/idaho-elk-hunting/idaho-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does an Idaho Elk Hunt Cost?",
+      "url": "/idaho-elk-hunting/idaho-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY vs. Drop Camp: Which Idaho Elk Hunt Is Right for You?",
+      "url": "/idaho-elk-hunting/guided-vs-diy-elk-hunting-idaho/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Idaho Controlled Hunt Draw Explained (Elk & Deer): No Points, Pure Luck",
+   "url": "/hunting-guides/idaho-controlled-hunt-draw-explained/"
+  }
+ },
+ "wy": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Wyoming Deer Hunting: The Complete Guide",
+    "url": "/wyoming-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Wyoming Deer Draw (Step by Step)",
+      "url": "/wyoming-deer-hunting/how-to-apply-for-the-wyoming-deer-draw/"
+     },
+     {
+      "title": "Wyoming General vs. Limited Quota Deer Licenses Explained",
+      "url": "/wyoming-deer-hunting/wyoming-general-deer-tags/"
+     },
+     {
+      "title": "Wyoming Deer Season Dates (and How to Pick a Season)",
+      "url": "/wyoming-deer-hunting/wyoming-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a Wyoming Deer Hunt Cost?",
+      "url": "/wyoming-deer-hunting/wyoming-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY Deer Hunting in Wyoming: Which Is Right for You?",
+      "url": "/wyoming-deer-hunting/guided-vs-diy-deer-hunting-wyoming/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Wyoming Elk Hunting: The Complete Guide",
+    "url": "/wyoming-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Wyoming Elk Draw (Step by Step)",
+      "url": "/wyoming-elk-hunting/how-to-apply-for-the-wyoming-elk-draw/"
+     },
+     {
+      "title": "Wyoming General vs. Limited Quota Elk Licenses (and the Wilderness Rule)",
+      "url": "/wyoming-elk-hunting/wyoming-general-elk-tags/"
+     },
+     {
+      "title": "Wyoming Elk Season Dates 2026 (and How to Pick a Season)",
+      "url": "/wyoming-elk-hunting/wyoming-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does a Wyoming Elk Hunt Cost?",
+      "url": "/wyoming-elk-hunting/wyoming-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY vs. Drop Camp: Which Wyoming Elk Hunt Is Right for You?",
+      "url": "/wyoming-elk-hunting/guided-vs-diy-elk-hunting-wyoming/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Wyoming Preference Points Explained (Elk & Deer)",
+   "url": "/hunting-guides/wyoming-preference-points-explained/"
+  }
+ },
+ "or": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Oregon Deer Hunting: The Complete Guide to Blacktail, Mule Deer and Whitetail",
+    "url": "/oregon-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for Oregon Deer Controlled Hunts (2026 Changes Explained)",
+      "url": "/oregon-deer-hunting/how-to-apply-for-oregon-deer-controlled-hunts/"
+     },
+     {
+      "title": "Oregon General Season Deer Tags: Western Oregon Blacktail Over the Counter",
+      "url": "/oregon-deer-hunting/oregon-general-season-deer-tags/"
+     },
+     {
+      "title": "Oregon Deer Season Dates 2026 (Blacktail, Mule Deer and Whitetail)",
+      "url": "/oregon-deer-hunting/oregon-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does an Oregon Deer Hunt Cost?",
+      "url": "/oregon-deer-hunting/oregon-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY Deer Hunting in Oregon: Which Is Right for You?",
+      "url": "/oregon-deer-hunting/guided-vs-diy-deer-hunting-oregon/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Oregon Elk Hunting: The Complete Guide",
+    "url": "/oregon-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for Oregon Elk Controlled Hunts (Step by Step)",
+      "url": "/oregon-elk-hunting/how-to-apply-for-oregon-elk-controlled-hunts/"
+     },
+     {
+      "title": "Oregon General Season Elk Tags: What You Can Buy Over the Counter",
+      "url": "/oregon-elk-hunting/oregon-general-season-elk-tags/"
+     },
+     {
+      "title": "Oregon Elk Season Dates 2026 (and How to Pick a Season)",
+      "url": "/oregon-elk-hunting/oregon-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does an Oregon Elk Hunt Cost?",
+      "url": "/oregon-elk-hunting/oregon-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY vs. Drop Camp: Which Oregon Elk Hunt Is Right for You?",
+      "url": "/oregon-elk-hunting/guided-vs-diy-elk-hunting-oregon/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Oregon Preference Points Explained (Elk & Deer)",
+   "url": "/hunting-guides/oregon-preference-points-explained/"
+  }
+ },
+ "nm": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "New Mexico Deer Hunting: The Complete Guide",
+    "url": "/new-mexico-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the New Mexico Deer Draw (Step by Step)",
+      "url": "/new-mexico-deer-hunting/how-to-apply-for-the-new-mexico-deer-draw/"
+     },
+     {
+      "title": "New Mexico Deer Licenses Outside the Draw: Private-Land and Leftover Tags",
+      "url": "/new-mexico-deer-hunting/new-mexico-deer-tags/"
+     },
+     {
+      "title": "New Mexico Deer Season Dates 2026 (Mule Deer and Coues Whitetail)",
+      "url": "/new-mexico-deer-hunting/new-mexico-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a New Mexico Deer Hunt Cost?",
+      "url": "/new-mexico-deer-hunting/new-mexico-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY: Which New Mexico Deer Hunt Is Right for You?",
+      "url": "/new-mexico-deer-hunting/guided-vs-diy-deer-hunting-new-mexico/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "New Mexico Elk Hunting: The Complete Guide",
+    "url": "/new-mexico-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the New Mexico Elk Draw (Step by Step)",
+      "url": "/new-mexico-elk-hunting/how-to-apply-for-the-new-mexico-elk-draw/"
+     },
+     {
+      "title": "New Mexico Landowner and Private-Land Elk Tags (EPLUS Explained)",
+      "url": "/new-mexico-elk-hunting/new-mexico-private-land-elk-tags/"
+     },
+     {
+      "title": "New Mexico Elk Season Dates 2026 (and How to Pick a Hunt)",
+      "url": "/new-mexico-elk-hunting/new-mexico-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does a New Mexico Elk Hunt Cost?",
+      "url": "/new-mexico-elk-hunting/new-mexico-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY: Which New Mexico Elk Hunt Is Right for You?",
+      "url": "/new-mexico-elk-hunting/guided-vs-diy-elk-hunting-new-mexico/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "New Mexico Draw Explained (Elk & Deer): No Points, Three Pools",
+   "url": "/hunting-guides/new-mexico-draw-explained/"
+  }
+ },
+ "mt": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Montana Deer Hunting: The Complete Guide",
+    "url": "/montana-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Montana Deer Draw (Step by Step)",
+      "url": "/montana-deer-hunting/how-to-apply-for-the-montana-deer-draw/"
+     },
+     {
+      "title": "Montana General Deer License, Permits, and B Licenses Explained",
+      "url": "/montana-deer-hunting/montana-general-deer-license/"
+     },
+     {
+      "title": "Montana Deer Season Dates 2026 (and How to Pick a Season)",
+      "url": "/montana-deer-hunting/montana-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a Montana Deer Hunt Cost?",
+      "url": "/montana-deer-hunting/montana-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY Deer Hunting in Montana: Which Is Right for You?",
+      "url": "/montana-deer-hunting/guided-vs-diy-deer-hunting-montana/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Montana Elk Hunting: The Complete Guide",
+    "url": "/montana-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Montana Elk Draw (Step by Step)",
+      "url": "/montana-elk-hunting/how-to-apply-for-the-montana-elk-draw/"
+     },
+     {
+      "title": "Montana General Elk License vs. Elk Permits Explained",
+      "url": "/montana-elk-hunting/montana-general-elk-license/"
+     },
+     {
+      "title": "Montana Elk Season Dates 2026 (and How to Pick a Season)",
+      "url": "/montana-elk-hunting/montana-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does a Montana Elk Hunt Cost?",
+      "url": "/montana-elk-hunting/montana-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY vs. Drop Camp: Which Montana Elk Hunt Is Right for You?",
+      "url": "/montana-elk-hunting/guided-vs-diy-elk-hunting-montana/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Montana Bonus Points Explained (Elk & Deer)",
+   "url": "/hunting-guides/montana-bonus-points-explained/"
+  }
+ },
+ "nv": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Nevada Mule Deer Hunting: The Complete Guide",
+    "url": "/nevada-mule-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Nevada Mule Deer Draw (Step by Step)",
+      "url": "/nevada-mule-deer-hunting/how-to-apply-for-the-nevada-mule-deer-draw/"
+     },
+     {
+      "title": "Nevada Mule Deer Tags: Guided Draw, Unit Groups, and Leftovers",
+      "url": "/nevada-mule-deer-hunting/nevada-mule-deer-tags/"
+     },
+     {
+      "title": "Nevada Mule Deer Season Dates 2026 (and How to Pick a Season)",
+      "url": "/nevada-mule-deer-hunting/nevada-mule-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a Nevada Mule Deer Hunt Cost?",
+      "url": "/nevada-mule-deer-hunting/nevada-mule-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY: Which Nevada Mule Deer Hunt Is Right for You?",
+      "url": "/nevada-mule-deer-hunting/guided-vs-diy-mule-deer-hunting-nevada/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Nevada Bonus Points Explained (Mule Deer & Elk)",
+   "url": "/hunting-guides/nevada-bonus-points-explained/"
+  }
+ },
+ "ca": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "California Deer Hunting: The Complete Guide",
+    "url": "/california-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the California Deer Draw (Step by Step)",
+      "url": "/california-deer-hunting/how-to-apply-for-the-california-deer-draw/"
+     },
+     {
+      "title": "California Deer Zone Tags Explained: A, B, C, D, and X Zones",
+      "url": "/california-deer-hunting/california-deer-zone-tags/"
+     },
+     {
+      "title": "California Deer Season Dates 2026 by Zone",
+      "url": "/california-deer-hunting/california-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a California Deer Hunt Cost?",
+      "url": "/california-deer-hunting/california-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. Ranch Hunt vs. DIY: Which California Deer Hunt Is Right for You?",
+      "url": "/california-deer-hunting/guided-vs-diy-deer-hunting-california/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "California Preference Points Explained (Deer & Elk)",
+   "url": "/hunting-guides/california-deer-preference-points-explained/"
+  }
+ },
+ "co": {
+  "guides": [
+   {
+    "sp": "deer",
+    "title": "Colorado Deer Hunting: The Complete Guide",
+    "url": "/colorado-deer-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Colorado Deer Draw (Step by Step)",
+      "url": "/colorado-deer-hunting/how-to-apply-for-the-colorado-deer-draw/"
+     },
+     {
+      "title": "Colorado Deer Tags: Draw, OTC Whitetail, Leftovers, and Landowner Vouchers",
+      "url": "/colorado-deer-hunting/colorado-deer-tags/"
+     },
+     {
+      "title": "Colorado Deer Season Dates 2026 (and How to Pick a Season)",
+      "url": "/colorado-deer-hunting/colorado-deer-season-dates/"
+     },
+     {
+      "title": "How Much Does a Colorado Deer Hunt Cost?",
+      "url": "/colorado-deer-hunting/colorado-deer-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY Deer Hunting in Colorado: Which Is Right for You?",
+      "url": "/colorado-deer-hunting/guided-vs-diy-deer-hunting-colorado/"
+     }
+    ]
+   },
+   {
+    "sp": "elk",
+    "title": "Colorado Elk Hunting: The Complete Guide",
+    "url": "/colorado-elk-hunting/",
+    "children": [
+     {
+      "title": "How to Apply for the Colorado Elk Draw (Step by Step)",
+      "url": "/colorado-elk-hunting/how-to-apply-for-the-colorado-elk-draw/"
+     },
+     {
+      "title": "Colorado OTC Elk Tags: What’s Still Available",
+      "url": "/colorado-elk-hunting/colorado-otc-elk-tags/"
+     },
+     {
+      "title": "Colorado Elk Season Dates 2026 (and How to Pick a Season)",
+      "url": "/colorado-elk-hunting/colorado-elk-season-dates/"
+     },
+     {
+      "title": "How Much Does a Colorado Elk Hunt Cost?",
+      "url": "/colorado-elk-hunting/colorado-elk-hunt-cost/"
+     },
+     {
+      "title": "Guided vs. DIY vs. Drop Camp: Which Colorado Elk Hunt Is Right for You?",
+      "url": "/colorado-elk-hunting/guided-vs-diy-elk-hunting-colorado/"
+     }
+    ]
+   }
+  ],
+  "points": {
+   "title": "Colorado Preference Points Explained (Elk & Deer)",
+   "url": "/hunting-guides/colorado-preference-points-explained/"
+  }
+ }
+}

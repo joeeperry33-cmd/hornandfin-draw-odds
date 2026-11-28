@@ -1,0 +1,252 @@
+{
+"ak": {
+"name": "Alaska Department of Fish and Game",
+"state": "Alaska",
+"url": "https://www.adfg.alaska.gov/"
+},
+"al": {
+"name": "Alabama Department of Conservation and Natural Resources, Wildlife and Freshwater Fisheries Division",
+"state": "Alabama",
+"url": "https://www.outdooralabama.com/"
+},
+"ar": {
+"name": "Arkansas Game and Fish Commission",
+"state": "Arkansas",
+"url": "https://www.agfc.com/"
+},
+"az": {
+"name": "Arizona Game and Fish Department",
+"state": "Arizona",
+"url": "https://www.azgfd.com/"
+},
+"ca": {
+"name": "California Department of Fish and Wildlife",
+"state": "California",
+"url": "https://wildlife.ca.gov/"
+},
+"co": {
+"name": "Colorado Parks and Wildlife",
+"state": "Colorado",
+"url": "https://cpw.state.co.us/"
+},
+"ct": {
+"name": "Connecticut Department of Energy and Environmental Protection (DEEP) Wildlife Division",
+"state": "Connecticut",
+"url": "https://portal.ct.gov/deep"
+},
+"de": {
+"name": "Delaware DNREC Division of Fish and Wildlife",
+"state": "Delaware",
+"url": "https://dnrec.delaware.gov/fish-wildlife/"
+},
+"fl": {
+"name": "Florida Fish and Wildlife Conservation Commission",
+"state": "Florida",
+"url": "https://myfwc.com/"
+},
+"ga": {
+"name": "Georgia Department of Natural Resources, Wildlife Resources Division",
+"state": "Georgia",
+"url": "https://georgiawildlife.com/"
+},
+"hi": {
+"name": "Hawaii Department of Land and Natural Resources, Division of Forestry and Wildlife (DOFAW)",
+"state": "Hawaii",
+"url": "https://dlnr.hawaii.gov/dofaw/"
+},
+"ia": {
+"name": "Iowa Department of Natural Resources",
+"state": "Iowa",
+"url": "https://www.iowadnr.gov/"
+},
+"id": {
+"name": "Idaho Department of Fish and Game",
+"state": "Idaho",
+"url": "https://idfg.idaho.gov/"
+},
+"il": {
+"name": "Illinois Department of Natural Resources",
+"state": "Illinois",
+"url": "https://dnr.illinois.gov/"
+},
+"in": {
+"name": "Indiana Department of Natural Resources, Division of Fish & Wildlife",
+"state": "Indiana",
+"url": "https://www.in.gov/dnr/fish-and-wildlife/"
+},
+"ks": {
+"name": "Kansas Department of Wildlife and Parks",
+"state": "Kansas",
+"url": "https://ksoutdoors.gov/"
+},
+"ky": {
+"name": "Kentucky Department of Fish and Wildlife Resources",
+"state": "Kentucky",
+"url": "https://fw.ky.gov/"
+},
+"la": {
+"name": "Louisiana Department of Wildlife and Fisheries",
+"state": "Louisiana",
+"url": "https://www.wlf.louisiana.gov/"
+},
+"ma": {
+"name": "Massachusetts Division of Fisheries and Wildlife (MassWildlife)",
+"state": "Massachusetts",
+"url": "https://www.mass.gov/orgs/division-of-fisheries-and-wildlife"
+},
+"md": {
+"name": "Maryland Department of Natural Resources",
+"state": "Maryland",
+"url": "https://dnr.maryland.gov/wildlife/"
+},
+"me": {
+"name": "Maine Department of Inland Fisheries and Wildlife (MDIFW)",
+"state": "Maine",
+"url": "https://www.maine.gov/ifw/"
+},
+"mi": {
+"name": "Michigan Department of Natural Resources",
+"state": "Michigan",
+"url": "https://www.michigan.gov/dnr"
+},
+"mn": {
+"name": "Minnesota Department of Natural Resources",
+"state": "Minnesota",
+"url": "https://www.dnr.state.mn.us/"
+},
+"mo": {
+"name": "Missouri Department of Conservation",
+"state": "Missouri",
+"url": "https://mdc.mo.gov/"
+},
+"ms": {
+"name": "Mississippi Department of Wildlife, Fisheries, and Parks",
+"state": "Mississippi",
+"url": "https://www.mdwfp.com/"
+},
+"mt": {
+"name": "Montana Fish, Wildlife & Parks",
+"state": "Montana",
+"url": "https://fwp.mt.gov/"
+},
+"nc": {
+"name": "North Carolina Wildlife Resources Commission",
+"state": "North Carolina",
+"url": "https://www.ncwildlife.gov/"
+},
+"nd": {
+"name": "North Dakota Game and Fish Department",
+"state": "North Dakota",
+"url": "https://gf.nd.gov/"
+},
+"ne": {
+"name": "Nebraska Game and Parks Commission",
+"state": "Nebraska",
+"url": "https://outdoornebraska.gov/"
+},
+"nh": {
+"name": "New Hampshire Fish and Game Department",
+"state": "New Hampshire",
+"url": "https://www.wildlife.nh.gov/"
+},
+"nj": {
+"name": "New Jersey Division of Fish and Wildlife",
+"state": "New Jersey",
+"url": "https://dep.nj.gov/njfw/"
+},
+"nm": {
+"name": "New Mexico Department of Wildlife",
+"state": "New Mexico",
+"url": "https://wildlife.dgf.nm.gov/"
+},
+"nv": {
+"name": "Nevada Department of Wildlife",
+"state": "Nevada",
+"url": "https://www.ndow.org/"
+},
+"ny": {
+"name": "New York State Department of Environmental Conservation (DEC)",
+"state": "New York",
+"url": "https://dec.ny.gov/"
+},
+"oh": {
+"name": "Ohio Department of Natural Resources, Division of Wildlife",
+"state": "Ohio",
+"url": "https://ohiodnr.gov/"
+},
+"ok": {
+"name": "Oklahoma Department of Wildlife Conservation",
+"state": "Oklahoma",
+"url": "https://www.wildlifedepartment.com/"
+},
+"or": {
+"name": "Oregon Department of Fish and Wildlife",
+"state": "Oregon",
+"url": "https://myodfw.com/"
+},
+"pa": {
+"name": "Pennsylvania Game Commission (PGC)",
+"state": "Pennsylvania",
+"url": "https://www.pa.gov/agencies/pgc"
+},
+"ri": {
+"name": "Rhode Island Department of Environmental Management (DEM), Division of Fish and Wildlife",
+"state": "Rhode Island",
+"url": "https://dem.ri.gov/"
+},
+"sc": {
+"name": "South Carolina Department of Natural Resources",
+"state": "South Carolina",
+"url": "https://www.dnr.sc.gov/"
+},
+"sd": {
+"name": "South Dakota Game, Fish and Parks",
+"state": "South Dakota",
+"url": "https://gfp.sd.gov/"
+},
+"tn": {
+"name": "Tennessee Wildlife Resources Agency",
+"state": "Tennessee",
+"url": "https://www.tn.gov/twra"
+},
+"tx": {
+"name": "Texas Parks and Wildlife Department",
+"state": "Texas",
+"url": "https://tpwd.texas.gov/"
+},
+"ut": {
+"name": "Utah Division of Wildlife Resources",
+"state": "Utah",
+"url": "https://wildlife.utah.gov/"
+},
+"va": {
+"name": "Virginia Department of Wildlife Resources",
+"state": "Virginia",
+"url": "https://dwr.virginia.gov/"
+},
+"vt": {
+"name": "Vermont Fish and Wildlife Department",
+"state": "Vermont",
+"url": "https://vtfishandwildlife.com/"
+},
+"wa": {
+"name": "Washington Department of Fish and Wildlife",
+"state": "Washington",
+"url": "https://wdfw.wa.gov/"
+},
+"wi": {
+"name": "Wisconsin Department of Natural Resources",
+"state": "Wisconsin",
+"url": "https://dnr.wisconsin.gov/"
+},
+"wv": {
+"name": "West Virginia Division of Natural Resources",
+"state": "West Virginia",
+"url": "https://wvdnr.gov/"
+},
+"wy": {
+"name": "Wyoming Game and Fish Department",
+"state": "Wyoming",
+"url": "https://wgfd.wyo.gov/"
+}
+}
