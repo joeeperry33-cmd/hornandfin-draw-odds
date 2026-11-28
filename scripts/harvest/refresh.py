@@ -136,6 +136,43 @@ def or_():
     H = json.load(open(os.path.join(WORK, 'or_harvest_raw.json')))
     return year, f'{year} harvest summaries (Oregon Department of Fish and Wildlife, mandatory harvest reporting)', [{'label': f'ODFW big game harvest statistics ({year})', 'url': idx}], H
 
+def nm():
+    idx = 'https://wildlife.dgf.nm.gov/hunting/harvest-reporting-information/'
+    page = get(idx)
+    want = {'elk': 'Elk', 'deer': 'Deer', 'pronghorn': 'Pronghorn', 'bighorn': 'Bighorn Sheep'}
+    found = {}
+    for u, t in links(page, idx):
+        m = re.match(r'(\d{4})[-_ ]\d{4} (Elk|Deer|Pronghorn|Bighorn Sheep) Harvest Report$', t, re.I)
+        if not m or '/download/' not in u: continue
+        k = [k for k, v in want.items() if v.lower() == m.group(2).lower()][0]
+        y = int(m.group(1))
+        if k not in found or y > found[k][0]: found[k] = (y, u)
+    year = max(y for y, u in found.values())
+    for k, (y, u) in found.items():
+        if y == year: save_pdf(u, 'nm_' + k)
+        elif os.path.exists(os.path.join(RAW, f'nm_{k}.txt')): os.remove(os.path.join(RAW, f'nm_{k}.txt'))
+    run('nm_build.py')
+    H = json.load(open(os.path.join(WORK, 'nm_harvest_raw.json')))
+    src = [{'label': f'NMDGF {y}-{y + 1} {want[k]} Harvest Report', 'url': u} for k, (y, u) in found.items() if y == year]
+    src.append({'label': 'NMDGF harvest reporting information', 'url': idx})
+    return year, f'{year} New Mexico hunter harvest reports (New Mexico Department of Game and Fish), by hunt code', src, H
+
+def nv():
+    api = 'https://www.ndow.org/wp-json/wp/v2/media?search=harvest%20by%20unit%20group&per_page=100&_fields=source_url'
+    files = {}
+    for x in json.loads(get(api)):
+        u = x['source_url']; m = re.search(r'/(\d{4})-([A-Za-z-]+)-Harvest-by-Unit-Group\.pdf$', u)
+        if m: files.setdefault(int(m.group(1)), {})[m.group(2)] = u
+    year = max(y for y, f in files.items() if len(f) >= 5)
+    for f in os.listdir(RAW):
+        if f.startswith('nv_'): os.remove(os.path.join(RAW, f))
+    for name, u in sorted(files[year].items()):
+        save_pdf(u, 'nv_' + name)
+    run('nv_build.py')
+    H = json.load(open(os.path.join(WORK, 'nv_harvest_raw.json')))
+    src = [{'label': f'NDOW {year} {n.replace("-", " ")} Harvest by Unit Group', 'url': u} for n, u in sorted(files[year].items())]
+    return year, f'{year} big game hunt statistics (Nevada Department of Wildlife)', src, H
+
 CO_PAGES = [  # (species stats page, [file names in co_build.py, in page order])
     ('hunting-elk/elk-statistics', ['co_elk']),
     ('hunting-deer/deer-statistics', ['co_deer']),
@@ -175,7 +212,7 @@ def co():
     src = [{'label': f'CPW {year} {CO_LABEL[n]} Harvest Report', 'url': u} for n, (y, u) in found.items()]
     return year, f'{year} Big Game Harvest Survey (Colorado Parks and Wildlife), by hunt code', src, H
 
-STATES = {'wy': wy, 'ut': ut, 'id': id_, 'or': or_, 'co': co}
+STATES = {'wy': wy, 'ut': ut, 'id': id_, 'or': or_, 'co': co, 'nm': nm, 'nv': nv}
 
 # ---------- checks + write ----------
 def check_and_write(st, year, survey, sources, H):
