@@ -7,6 +7,8 @@ on:
     - cron: '17 14 * 2-6 1'   # Mondays 14:17 UTC, Feb to Jun
     - cron: '17 14 1 * *'     # 1st of every month
   workflow_dispatch:
+    inputs:
+      states: { description: 'States to refresh (blank = all)', required: false, default: '' }
 permissions:
   contents: write
 jobs:
@@ -25,7 +27,7 @@ jobs:
       - name: Refresh WY, UT, ID, OR, CO
         id: run
         continue-on-error: true
-        run: set -o pipefail; python3 scripts/harvest/refresh.py wy ut id or co | tee refresh.log
+        run: set -o pipefail; python3 scripts/harvest/refresh.py ${{ inputs.states || 'wy ut id or co' }} | tee refresh.log
       - name: Rebuild state hub summaries
         run: |
           python3 scripts/hub/build.py

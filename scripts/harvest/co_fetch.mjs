@@ -11,11 +11,14 @@ for (const pair of pairs) {
   const i = pair.indexOf('='); const name = pair.slice(0, i), url = pair.slice(i + 1);
   const ctx = await browser.newContext({ acceptDownloads: true });
   const page = await ctx.newPage();
-  const seen = [];
+  const seen = [], all = [];
   page.on('response', r => {
     const u = r.url(), ct = (r.headers()['content-type'] || '');
-    if (ct.includes('pdf') || /widencdn\.net\/.*\.pdf/i.test(u)) seen.push(u);
+    all.push(r.status() + ' ' + ct.split(';')[0] + ' ' + u.slice(0, 160));
+    if (ct.includes('pdf') || /\.pdf(\?|$)/i.test(u)) seen.push(u);
   });
+  let dl = null;
+  page.on('download', d => { dl = d; });
   try {
     await page.goto(url, { waitUntil: 'networkidle', timeout: 90000 });
     for (let t = 0; t < 30 && !seen.length; t++) {
@@ -27,11 +30,26 @@ for (const pair of pairs) {
         } catch {}
       }
       if (!seen.length) await page.waitForTimeout(1000);
+      if (!seen.length && t == 5) {
+        // no inline viewer: press the share page's Download button
+        const btn = page.getByRole('button', { name: /download/i }).or(page.getByRole('link', { name: /download/i })).first();
+        try { await btn.click({ timeout: 10000 }); } catch (e) { console.log('no download button', e.message.split('\n')[0]); }
+        for (let k = 0; k < 20 && !dl; k++) await page.waitForTimeout(1000);
+        if (dl) break;
+      }
     }
-    if (!seen.length) throw new Error('no PDF URL found');
-    const r = await ctx.request.get(seen[0], { timeout: 120000 });
-    const b = await r.body();
-    if (b.slice(0, 4).toString() !== '%PDF') throw new Error('not a PDF (' + r.status() + ')');
+    let b;
+    if (dl) b = fs.readFileSync(await dl.path());
+    else {
+      if (!seen.length) {
+        const txt = (await page.evaluate(() => document.body.innerText)).slice(0, 600).replace(/\s+/g, ' ');
+        console.log('DEBUG page text:', txt); console.log('DEBUG responses:\n' + all.slice(-40).join('\n'));
+        throw new Error('no PDF URL found');
+      }
+      const r = await ctx.request.get(seen[0], { timeout: 120000 });
+      b = await r.body();
+    }
+    if (b.slice(0, 4).toString() !== '%PDF') throw new Error('not a PDF');
     fs.writeFileSync(path.join(out, name + '.pdf'), b);
     console.log('ok', name, b.length, 'bytes');
   } catch (e) { console.log('ERROR', name, url, e.message); failed++; }

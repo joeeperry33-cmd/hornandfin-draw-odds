@@ -166,7 +166,7 @@ def co():
     if stale:
         print(f'co: {year} reports not out yet for {stale}; keeping the published year until all are out'); return None
     r = subprocess.run(['node', os.path.join(HERE, 'co_fetch.mjs'), RAW] + [f'{n}={u}' for n, (y, u) in found.items()], capture_output=True, text=True)
-    print(r.stdout[-1500:])
+    print(r.stdout[-6000:])
     if r.returncode: raise RuntimeError('download failed: ' + (r.stdout + r.stderr)[-800:])
     for n in found:
         subprocess.run(['pdftotext', '-layout', os.path.join(RAW, n + '.pdf'), os.path.join(RAW, n + '.txt')], check=True)
