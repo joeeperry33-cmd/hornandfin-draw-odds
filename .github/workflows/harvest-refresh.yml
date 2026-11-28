@@ -27,7 +27,7 @@ jobs:
       - name: Refresh WY, UT, ID, OR, CO
         id: run
         continue-on-error: true
-        run: set -o pipefail; python3 scripts/harvest/refresh.py ${{ inputs.states || 'wy ut id or co nm nv' }} | tee refresh.log
+        run: set -o pipefail; python3 scripts/harvest/refresh.py ${{ inputs.states || 'wy ut id or co nm nv az' }} | tee refresh.log
       - name: Rebuild state hub summaries
         run: |
           python3 scripts/hub/build.py

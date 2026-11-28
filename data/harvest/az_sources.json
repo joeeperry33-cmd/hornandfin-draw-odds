@@ -1,0 +1,8 @@
+{"year": 2025,
+ "note": "Arizona's site blocks automated page checks, so the harvest summary PDF links are listed here. The PDFs are read from Arizona's file server. When a new year's summaries come out (Jan to Sep), add their links and the refresh job picks them up.",
+ "files": {
+  "elk": "https://azgfd-live-portal-wordpress-pantheon.s3.us-west-2.amazonaws.com/wp-content/uploads/2026/09/04131725/2025-AZ-Elk-Harvest-Summary.pdf",
+  "deer": "https://azgfd-live-portal-wordpress-pantheon.s3.us-west-2.amazonaws.com/wp-content/uploads/2026/03/20153150/2025-AZ-Deer-Harvest-Summary.pdf",
+  "pronghorn": "https://azgfd-live-portal-wordpress-pantheon.s3.us-west-2.amazonaws.com/wp-content/uploads/2026/01/20154105/2025-AZ-Pronghorn-Harvest-Summary-1.pdf",
+  "sheep": "https://azgfd-live-portal-wordpress-pantheon.s3.us-west-2.amazonaws.com/wp-content/uploads/2026/01/20154356/2025-AZ-Bighorn-Sheep-Harvest-Summary-2.pdf"
+ }}
