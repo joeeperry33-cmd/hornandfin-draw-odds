@@ -1,8 +1,8 @@
-import re, json, sys
-sys.path.insert(0,'/home/user/harvest/scripts')
+import re, json, sys, os
+sys.path.insert(0,os.path.dirname(os.path.abspath(__file__)))
 from wy_parse import parse
 import os
-R=os.environ.get('HARVEST_RAW','raw/')
+R=os.path.join(os.environ.get('HF_WORK','harvest-work'),'raw/')
 def tbl_end(n): return r'Table %d:'%n
 
 def parse_small(path, start_pat, stop_pat):
@@ -96,7 +96,7 @@ def add(sp, prefix, parsed, small=False, type_ok=None):
 add('elk','Elk',parse(R+'wy_elk.txt','Table 3: Harvest Statistics by Hunt Area',tbl_end(4),4,''))
 mule=parse(R+'wy_deer.txt','Table 7: Mule Deer Harvest Statistics by Hunt Area',tbl_end(8),3,'')
 wt=parse(R+'wy_deer.txt','Table 8: White-Tailed Deer Harvest Statistics by Hunt Area',tbl_end(9),3,'')
-d0=json.load(open('/home/user/hornandfin-draw-odds/data/wy.json'))
+d0=json.load(open(os.path.join(os.environ.get('HF_REPO','.'),'data/')+'wy.json'))
 wt_ids={h['id'] for h in d0['hunts'] if h['sp']=='deer' and 'White' in h['name']}
 add('deer','Deer',mule)
 tmp=out; out={}
@@ -111,8 +111,8 @@ add('moose','Moose',parse_small(R+'wy_moose.txt','By Hunt Area',r'Table 4'),smal
 add('sheep','Sheep',parse_small(R+'wy_sheep.txt','By Hunt Area',r'Table 4'),small=True)
 add('goat','Goat',parse_small(R+'wy_goat.txt','By Hunt Area',r'Table 4'),small=True)
 add('bison','Bison',parse_bison(R+'wy_bison.txt'),small=True)
-json.dump(out,open('/home/user/harvest/wy_harvest_raw.json','w'),indent=0)
-d=json.load(open('/home/user/hornandfin-draw-odds/data/wy.json'))
+json.dump(out,open(os.path.join(os.environ.get('HF_WORK','harvest-work'),'wy_harvest_raw.json'),'w'),indent=0)
+d=json.load(open(os.path.join(os.environ.get('HF_REPO','.'),'data/')+'wy.json'))
 ids={h['id']:h['sp'] for h in d['hunts']}
 import collections
 hit=collections.Counter(); tot=collections.Counter(); miss=[]
@@ -135,7 +135,7 @@ def regions(path, start, nharv, prefix, sp):
         out[f'{prefix} {code}']={'success':n[3+nharv],'hunters':n[0],'harvest':n[1+nharv],'days':n[2+nharv],'sp':sp,'area_name':'Nonresident general region '+m.group(1)}
 regions(R+'wy_elk.txt','Table 5: Harvest Statistics by Nonresident General Region',4,'Elk','elk')
 regions(R+'wy_deer.txt','Table 11: Mule Deer Harvest Statistics by Nonresident General Region',3,'Deer','deer')
-json.dump(out,open('/home/user/harvest/wy_harvest_raw.json','w'),indent=0)
+json.dump(out,open(os.path.join(os.environ.get('HF_WORK','harvest-work'),'wy_harvest_raw.json'),'w'),indent=0)
 hit=collections.Counter(); miss=[]
 for i,sp in ids.items():
     if i in out: hit[sp]+=1

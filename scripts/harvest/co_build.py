@@ -1,6 +1,6 @@
 import re, json, glob, collections
 import os
-R=os.environ.get('HARVEST_RAW','raw/')
+R=os.path.join(os.environ.get('HF_WORK','harvest-work'),'raw/')
 out={}
 def parse(path, sp):
     hdr=None
@@ -25,11 +25,11 @@ def parse(path, sp):
         out[did]=e
 for sp,f in [('elk','co_elk'),('deer','co_deer'),('antelope','co_pronghorn'),('moose','co_moose'),('sheep','co_sheep'),('goat','co_goat'),('sheep','co_dsheep'),('bear','co_bear')]:
     parse(R+f+'.txt', sp)
-d=json.load(open('/home/user/hornandfin-draw-odds/data/co.json'))
+d=json.load(open(os.path.join(os.environ.get('HF_REPO','.'),'data/')+'co.json'))
 hit=collections.Counter(); tot=collections.Counter(); miss=[]
 for h in d['hunts']:
     tot[h['sp']]+=1
     if h['id'] in out: hit[h['sp']]+=1
     else: miss.append(h['id'])
 print(len(out),{s:f"{hit[s]}/{tot[s]}" for s in tot}); print(miss[:30])
-json.dump(out,open('/home/user/harvest/co_harvest_raw.json','w'))
+json.dump(out,open(os.path.join(os.environ.get('HF_WORK','harvest-work'),'co_harvest_raw.json'),'w'))
