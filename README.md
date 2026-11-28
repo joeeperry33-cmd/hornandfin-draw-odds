@@ -14,3 +14,6 @@ Hunter success from each state's own post-season harvest survey, keyed by the sa
 
 - Wyoming: 2025 WGFD harvest reports (elk, deer, pronghorn, moose, sheep, goat, bison), matched by hunt area + license type.
 - Colorado: 2025 CPW harvest reports, which since 2025 are published by hunt code (elk, deer, pronghorn, moose, sheep, goat, bear). Includes over-the-counter codes.
+- Utah: 2025 preliminary big game harvest (all hunts by hunt number) plus 2025 bighorn sheep records.
+- Idaho: 2025 controlled hunt harvest statistics from the IDFG Hunt Planner (HTML tables).
+- Oregon: 2025 ODFW harvest summaries; rows for one hunt across several units are summed. Eastside deer hunts were renumbered for 2026, so few deer hunts match.
