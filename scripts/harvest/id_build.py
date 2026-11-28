@@ -1,5 +1,5 @@
 import re, json, os, collections, subprocess, html as H
-R=os.environ.get('HARVEST_RAW','/home/user/harvest/raw/')
+R=os.path.join(os.environ.get('HF_WORK','harvest-work'),'raw/')
 out={}; spmap={'deer':'deer','elk':'elk','pronghorn':'antelope','moose':'moose','goat':'goat','bear':'bear','sheep':'sheep'}
 for g in ['deer','elk','pronghorn','moose','goat','bear','sheep']:
     p=R+f'id_{g}.html'
@@ -21,7 +21,7 @@ for g in ['deer','elk','pronghorn','moose','goat','bear','sheep']:
         if v.get('%6+Pts'): e['p6']=v['%6+Pts']
         out[(spmap[g],v['Hunt#'])]=e; n+=1
     print(g,n,hdr)
-d=json.load(open('/home/user/hornandfin-draw-odds/data/id.json'))
+d=json.load(open(os.path.join(os.environ.get('HF_REPO','.'),'data/')+'id.json'))
 hit=collections.Counter(); tot=collections.Counter(); miss=[]
 res={}
 for h in d['hunts']:
@@ -31,4 +31,4 @@ for h in d['hunts']:
     else: miss.append((h['sp'],h['id']))
 print({s:f"{hit[s]}/{tot[s]}" for s in tot}); print(miss[:30])
 print('dup ids in draw file:',len(d['hunts'])-len({h['id'] for h in d['hunts']}))
-json.dump(res,open('/home/user/harvest/id_harvest_raw.json','w'))
+json.dump(res,open(os.path.join(os.environ.get('HF_WORK','harvest-work'),'id_harvest_raw.json'),'w'))

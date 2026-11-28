@@ -1,5 +1,5 @@
 import re, json, os, collections
-R=os.environ.get('HARVEST_RAW','/home/user/harvest/raw/')
+R=os.path.join(os.environ.get('HF_WORK','harvest-work'),'raw/')
 out={}
 # 2025 preliminary all-hunts table: Hunt# Species Name Type Weapon Sex Permits Hunters Harvest Success Days Satisfaction
 for ln in open(R+'ut_2025_gs_buck_deer_hr-preliminary.txt'):
@@ -16,11 +16,11 @@ for ln in open(R+'ut_sheep_2025.txt'):
         agg[m.group(1)][0]+=1; agg[m.group(1)][1]+= m.group(3)=='Y'
 for c,(h,k) in agg.items():
     if c not in out: out[c]={'s':round(100*k/h,1),'h':h,'k':k}
-d=json.load(open('/home/user/hornandfin-draw-odds/data/ut.json'))
+d=json.load(open(os.path.join(os.environ.get('HF_REPO','.'),'data/')+'ut.json'))
 hit=collections.Counter(); tot=collections.Counter(); miss=[]
 for h in d['hunts']:
     tot[h['sp']]+=1
     if h['id'] in out: hit[h['sp']]+=1
     else: miss.append(h['id'])
 print(len(out),{s:f"{hit[s]}/{tot[s]}" for s in tot}); print(miss[:40])
-json.dump(out,open('/home/user/harvest/ut_harvest_raw.json','w'))
+json.dump(out,open(os.path.join(os.environ.get('HF_WORK','harvest-work'),'ut_harvest_raw.json'),'w'))
