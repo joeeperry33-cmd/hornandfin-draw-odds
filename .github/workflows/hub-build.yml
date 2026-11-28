@@ -1,0 +1,31 @@
+name: Rebuild state hub summaries
+# The state hub pages on hornandfin.com load small summary files from data/hub/.
+# Rebuild them whenever draw or harvest data changes, then clear the CDN cache.
+on:
+  push:
+    branches: [main]
+    paths: ['data/*.json', 'data/harvest/**', 'scripts/hub/**']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: { group: hub-build, cancel-in-progress: false }
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: main }
+      - name: Build
+        run: python3 scripts/hub/build.py
+      - name: Commit and purge
+        run: |
+          git add -N data/hub
+          if git diff --quiet -- data/hub; then echo "No change"; exit 0; fi
+          git config user.name "hub-build"
+          git config user.email "actions@users.noreply.github.com"
+          git add data/hub
+          git commit -m "Rebuild state hub summaries"
+          git push
+          for f in $(git diff --name-only HEAD~1 HEAD -- data/hub); do
+            curl -fsS "https://purge.jsdelivr.net/gh/${GITHUB_REPOSITORY}@main/$f" >/dev/null || echo "purge failed for $f"
+          done

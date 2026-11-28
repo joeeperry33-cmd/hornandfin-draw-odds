@@ -12,7 +12,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-        with: { fetch-depth: 2 }
+        with:
+          fetch-depth: 2
+          # When called after another workflow commits, purge that new commit on main.
+          ref: ${{ github.event_name == 'push' && github.sha || 'main' }}
       - name: Purge changed files
         run: |
           files=$(git diff --name-only HEAD~1 HEAD -- data tool 2>/dev/null || true)
