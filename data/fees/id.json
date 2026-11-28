@@ -1,0 +1,70 @@
+{
+ "state": "id",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Idaho Fish and Game resident fees",
+   "url": "https://idfg.idaho.gov/licenses/fees-resident"
+  },
+  {
+   "name": "Idaho Fish and Game nonresident fees",
+   "url": "https://idfg.idaho.gov/licenses/fees-nonresident"
+  }
+ ],
+ "base": [
+  {
+   "res": 15.75,
+   "nr": 185,
+   "label": "Hunting license"
+  },
+  {
+   "res": 5,
+   "nr": 10,
+   "label": "Access/depredation fee"
+  }
+ ],
+ "app": {
+  "res": 6.25,
+  "nr": 18,
+  "label": "Controlled hunt application fee"
+ },
+ "note": "Moose, sheep and goat applications cost $16.75 resident / $45.75 nonresident. Residents in Price Lock pay less.",
+ "species": {
+  "elk": {
+   "res": 36.75,
+   "nr": 651.75,
+   "label": "Elk tag"
+  },
+  "deer": {
+   "res": 24.75,
+   "nr": 351.75,
+   "label": "Deer tag"
+  },
+  "antelope": {
+   "res": 36.5,
+   "nr": 342.75,
+   "label": "Pronghorn tag"
+  },
+  "moose": {
+   "res": 199.75,
+   "nr": 2626.75,
+   "label": "Moose tag"
+  },
+  "sheep": {
+   "res": 199.75,
+   "nr": 2626.75,
+   "label": "Bighorn sheep tag"
+  },
+  "goat": {
+   "res": 199.75,
+   "nr": 2626.75,
+   "label": "Mountain goat tag"
+  },
+  "bear": {
+   "res": 13.75,
+   "nr": 231.75,
+   "label": "Black bear tag"
+  }
+ }
+}

@@ -38,8 +38,9 @@ function render(el,d){
       var u=unitOf(r.name),href='/hunting-guides/draw-odds/?state='+st+'&species='+sp+(u?'&unit='+encodeURIComponent(u):'');
       var pl=/private land/i.test(r.name)?'<span class="hb-pl">Private land</span>':'';
       var pt='';if(r.pts){pt=' · To draw: '+esc(ptxt(r.pts.res))+' res, '+esc(ptxt(r.pts.nr))+' nonres'}
+      if(r.c){pt+=' · License + tag: '+(r.c[0]!=null?'$'+r.c[0].toLocaleString()+' res':'')+(r.c[0]!=null&&r.c[1]!=null?', ':'')+(r.c[1]!=null?'$'+r.c[1].toLocaleString()+' nonres':'nonres not eligible')}
       h+='<tr><td><a class="hb-h" href="'+href+'">'+esc(r.name||r.id)+'</a>'+pl+'<div class="hb-m">'+esc(r.id)+' · '+r.h.toLocaleString()+' hunters'+pt+'</div></td><td class="hb-s">'+r.s.toFixed(0)+'%</td></tr>'});
-    h+='</tbody></table><p class="hb-foot">Limited-draw hunts with at least '+d.min_hunters+' hunters, from the '+esc(d.survey||'state harvest survey')+'. '+(mode=='easy'?'Points are what it took to draw last year. ':'')+'Tap a hunt to see its unit’s draw odds.</p>';
+    h+='</tbody></table><p class="hb-foot">Limited-draw hunts with at least '+d.min_hunters+' hunters, from the '+esc(d.survey||'state harvest survey')+'. '+(mode=='easy'?'Points are what it took to draw last year. ':'')+'Tap a hunt to see its unit’s draw odds.'+(d.fees?' License + tag is the state’s '+esc(d.fees.year)+' price for the hunting license, required stamps and tag, not counting application fees.':'')+'</p>';
     el.innerHTML=h;
     Array.prototype.forEach.call(el.querySelectorAll('.hb-tab'),function(b){b.onclick=function(){if(b.dataset.sp){sp=b.dataset.sp;if(!d.species[sp].easy)mode='top'}else mode=b.dataset.mode;draw()}});
   }

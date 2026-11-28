@@ -1,0 +1,162 @@
+{
+ "state": "ut",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Utah Division of Wildlife Resources license and permit fees",
+   "url": "https://wildlife.utah.gov/fees"
+  }
+ ],
+ "base": [
+  {
+   "res": 40,
+   "nr": 144,
+   "label": "Basic hunting license"
+  }
+ ],
+ "app": {
+  "res": 10,
+  "nr": 21,
+  "label": "Draw application fee"
+ },
+ "note": "Nonresident buck, bull and once-in-a-lifetime permits include a 365-day fishing license.",
+ "species": {
+  "elk": {
+   "res": 314,
+   "nr": 1950,
+   "label": "Limited-entry bull elk permit",
+   "rules": [
+    {
+     "m": "multiseason",
+     "res": 564,
+     "nr": 2655,
+     "label": "Multiseason bull elk permit"
+    },
+    {
+     "m": "antlerless",
+     "res": 56,
+     "nr": 649,
+     "label": "Antlerless elk permit"
+    },
+    {
+     "m": "general",
+     "res": 56,
+     "nr": 849,
+     "label": "General-season bull elk permit"
+    }
+   ]
+  },
+  "deer": {
+   "res": 94,
+   "nr": 1070,
+   "label": "Limited-entry buck deer permit",
+   "rules": [
+    {
+     "m": "premium.*multiseason",
+     "res": 336,
+     "nr": 2330,
+     "label": "Premium multiseason buck permit"
+    },
+    {
+     "m": "premium",
+     "res": 185,
+     "nr": 1398,
+     "label": "Premium limited-entry buck permit"
+    },
+    {
+     "m": "multiseason",
+     "res": 170,
+     "nr": 2130,
+     "label": "Multiseason buck permit"
+    },
+    {
+     "m": "two-doe",
+     "res": 50,
+     "nr": 434,
+     "label": "Two-doe antlerless permit"
+    },
+    {
+     "m": "antlerless|doe",
+     "res": 35,
+     "nr": 236,
+     "label": "Antlerless deer permit"
+    },
+    {
+     "m": "general",
+     "res": 46,
+     "nr": 599,
+     "label": "General-season buck permit"
+    }
+   ]
+  },
+  "antelope": {
+   "res": 63,
+   "nr": 571,
+   "label": "Buck pronghorn permit",
+   "rules": [
+    {
+     "m": "two-doe",
+     "res": 60,
+     "nr": 434,
+     "label": "Two-doe pronghorn permit"
+    },
+    {
+     "m": "doe",
+     "res": 35,
+     "nr": 236,
+     "label": "Doe pronghorn permit"
+    }
+   ]
+  },
+  "moose": {
+   "res": 454,
+   "nr": 3488,
+   "label": "Bull moose permit",
+   "rules": [
+    {
+     "m": "antlerless",
+     "res": 249,
+     "nr": 2200,
+     "label": "Antlerless moose permit"
+    }
+   ]
+  },
+  "sheep": {
+   "res": 564,
+   "nr": 3988,
+   "label": "Bighorn ram permit",
+   "rules": [
+    {
+     "m": "ewe",
+     "res": 110,
+     "nr": 2100,
+     "label": "Bighorn ewe permit"
+    }
+   ]
+  },
+  "goat": {
+   "res": 454,
+   "nr": 3488,
+   "label": "Mountain goat permit"
+  },
+  "bison": {
+   "res": 460,
+   "nr": 4840,
+   "label": "Bison permit",
+   "rules": [
+    {
+     "m": "antelope island",
+     "res": 1221,
+     "nr": 5754,
+     "label": "Antelope Island bison permit"
+    }
+   ]
+  },
+  "bear": {
+   "res": 93,
+   "nr": 600,
+   "label": "Bear permit"
+  }
+ }
+}

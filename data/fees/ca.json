@@ -1,0 +1,51 @@
+{
+ "state": "ca",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "California Department of Fish and Wildlife hunting license items and fees (2026-27)",
+   "url": "https://wildlife.ca.gov/Licensing/Hunting/Items"
+  }
+ ],
+ "base": [
+  {
+   "res": 64.54,
+   "nr": 225.46,
+   "label": "Annual hunting license"
+  }
+ ],
+ "app": {
+  "res": 8.38,
+  "nr": 8.38,
+  "label": "Drawing application (elk, pronghorn, sheep)"
+ },
+ "note": "Deer tag price includes the deer drawing application.",
+ "species": {
+  "elk": {
+   "res": 610.2,
+   "nr": 1871.8,
+   "label": "Elk tag"
+  },
+  "deer": {
+   "res": 42.38,
+   "nr": 377.35,
+   "label": "Deer tag"
+  },
+  "antelope": {
+   "res": 205.77,
+   "nr": 628.85,
+   "label": "Pronghorn tag"
+  },
+  "sheep": {
+   "res": 558.5,
+   "nr": 2072.75,
+   "label": "Bighorn sheep tag"
+  },
+  "bear": {
+   "res": 62.9,
+   "nr": 397.6,
+   "label": "Bear tag"
+  }
+ }
+}

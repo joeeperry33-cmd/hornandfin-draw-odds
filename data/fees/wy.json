@@ -1,0 +1,106 @@
+{
+ "state": "wy",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Wyoming Game and Fish license fee list",
+   "url": "https://wgfd.wyo.gov/licenses-applications/license-fee-list"
+  }
+ ],
+ "base": [
+  {
+   "res": 21.5,
+   "nr": 21.5,
+   "label": "Conservation stamp"
+  }
+ ],
+ "app": {
+  "res": 5,
+  "nr": 15,
+  "label": "Application fee"
+ },
+ "note": "Nonresident elk includes a fishing license. Special (higher-odds) nonresident licenses cost more.",
+ "species": {
+  "elk": {
+   "res": 57,
+   "nr": 692,
+   "label": "Elk license",
+   "rules": [
+    {
+     "m": "antlerless|cow",
+     "res": 43,
+     "nr": 288,
+     "label": "Cow/calf elk"
+    }
+   ]
+  },
+  "deer": {
+   "res": 42,
+   "nr": 374,
+   "label": "Deer license",
+   "rules": [
+    {
+     "m": "doe|fawn",
+     "res": 22,
+     "nr": 34,
+     "label": "Doe/fawn deer"
+    }
+   ]
+  },
+  "antelope": {
+   "res": 37,
+   "nr": 326,
+   "label": "Antelope license",
+   "rules": [
+    {
+     "m": "doe|fawn",
+     "res": 22,
+     "nr": 34,
+     "label": "Doe/fawn antelope"
+    }
+   ]
+  },
+  "moose": {
+   "res": 152,
+   "nr": 2752,
+   "label": "Moose license"
+  },
+  "goat": {
+   "res": 152,
+   "nr": 2752,
+   "label": "Mountain goat license"
+  },
+  "sheep": {
+   "res": 152,
+   "nr": 3002,
+   "label": "Bighorn sheep license",
+   "rules": [
+    {
+     "m": "ewe|lamb",
+     "res": 36,
+     "nr": 240,
+     "label": "Ewe/lamb sheep"
+    }
+   ]
+  },
+  "bison": {
+   "res": 414,
+   "nr": 6002,
+   "label": "Bison license",
+   "rules": [
+    {
+     "m": "female|calf",
+     "res": 260,
+     "nr": 2752,
+     "label": "Female/calf bison"
+    }
+   ]
+  },
+  "bear": {
+   "res": 47,
+   "nr": 373,
+   "label": "Black bear license"
+  }
+ }
+}

@@ -1,0 +1,70 @@
+{
+ "state": "co",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Colorado Parks and Wildlife license fees",
+   "url": "https://cpw.state.co.us/activities/hunting/big-game"
+  },
+  {
+   "name": "CPW primary draw: application and preference point fees",
+   "url": "https://cpw.state.co.us/activities/hunting/big-game/primary-draw"
+  }
+ ],
+ "base": [
+  {
+   "res": 38.49,
+   "nr": 104.86,
+   "label": "Qualifying license (small game)"
+  },
+  {
+   "res": 12.76,
+   "nr": 12.76,
+   "label": "Habitat stamp"
+  }
+ ],
+ "app": {
+  "res": 8.93,
+  "nr": 11.49,
+  "label": "Application fee"
+ },
+ "note": "Nonresident elk includes a fishing license. Moose, sheep and goat applicants also pay a preference point fee.",
+ "species": {
+  "elk": {
+   "res": 70.4,
+   "nr": 845.16,
+   "label": "Elk license"
+  },
+  "deer": {
+   "res": 51.25,
+   "nr": 506.92,
+   "label": "Deer license"
+  },
+  "antelope": {
+   "res": 51.25,
+   "nr": 506.92,
+   "label": "Pronghorn license"
+  },
+  "moose": {
+   "res": 385.66,
+   "nr": 2823.53,
+   "label": "Moose license"
+  },
+  "sheep": {
+   "res": 385.66,
+   "nr": 2823.53,
+   "label": "Bighorn sheep license"
+  },
+  "goat": {
+   "res": 385.66,
+   "nr": 2823.53,
+   "label": "Mountain goat license"
+  },
+  "bear": {
+   "res": 64.01,
+   "nr": 299.81,
+   "label": "Bear license"
+  }
+ }
+}
