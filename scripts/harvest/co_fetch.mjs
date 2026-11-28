@@ -9,7 +9,8 @@ const browser = await chromium.launch();
 let failed = 0;
 for (const pair of pairs) {
   const i = pair.indexOf('='); const name = pair.slice(0, i), url = pair.slice(i + 1);
-  const ctx = await browser.newContext({ acceptDownloads: true });
+  const ctx = await browser.newContext({ acceptDownloads: true, viewport: { width: 1366, height: 900 }, locale: 'en-US',
+    userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36' });
   const page = await ctx.newPage();
   const seen = [], all = [];
   page.on('response', r => {
@@ -17,6 +18,8 @@ for (const pair of pairs) {
     all.push(r.status() + ' ' + ct.split(';')[0] + ' ' + u.slice(0, 160));
     if (ct.includes('pdf') || /\.pdf(\?|$)/i.test(u)) seen.push(u);
   });
+  page.on('requestfailed', r => all.push('FAILED ' + (r.failure() || {}).errorText + ' ' + r.url().slice(0, 160)));
+  page.on('console', m => { if (m.type() == 'error') all.push('CONSOLE ' + m.text().slice(0, 200)); });
   let dl = null;
   page.on('download', d => { dl = d; });
   try {
@@ -43,7 +46,7 @@ for (const pair of pairs) {
     else {
       if (!seen.length) {
         const txt = (await page.evaluate(() => document.body.innerText)).slice(0, 600).replace(/\s+/g, ' ');
-        console.log('DEBUG page text:', txt); console.log('DEBUG responses:\n' + all.slice(-40).join('\n'));
+        console.log('DEBUG page text:', txt); console.log('DEBUG responses:\n' + all.filter(x => !/^200 (text\/javascript|text\/css|application\/javascript)/.test(x)).slice(-60).join('\n'));
         throw new Error('no PDF URL found');
       }
       const r = await ctx.request.get(seen[0], { timeout: 120000 });
