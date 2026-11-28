@@ -8,7 +8,7 @@ var POOLS={res:'Residents',nr:'Nonresidents',all:'All applicants',nr_special:'No
 var RESPOOLS={res:['res','youth_res','landowner'],nr:['nr','nr_special','nr_rand','nr_special_rand','out','youth_nr']};
 var $=function(id){return document.getElementById(id)};
 var S={st:'co',sp:'elk',res:'nr',pts:0,q:'',sort:'apps',dir:-1,limit:50,onlyMine:false,hunt:null,weapon:'all',tab:'likely',unit:'',uq:''};
-var cache={},rules=null;
+var cache={},rules=null,hcache={};
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
 function money(v){return v==null?'—':(v===0?'Free':'$'+(+v).toFixed(v%1?2:0))}
 function pct(p){return p==null?'—':(p>=0.995?'100%':(p<0.005&&p>0?'<1%':Math.round(p*100)+'%'))}
@@ -16,6 +16,10 @@ function pill(p){var c=p==null?'p-na':p>=0.6?'p-hi':p>=0.2?'p-mid':'p-lo';return
 function getJSON(u){return fetch(u,{cache:'force-cache'}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json()})}
 function loadRules(){return rules?Promise.resolve(rules):getJSON(BASE+'data/rules.json').then(function(j){rules=j;return j})}
 function loadState(st){if(cache[st]!==undefined)return Promise.resolve(cache[st]);return getJSON(BASE+'data/'+st+'.json').then(function(j){cache[st]=j;return j}).catch(function(){cache[st]=null;return null})}
+function loadHarvest(st){if(hcache[st]!==undefined)return Promise.resolve(hcache[st]);return getJSON(BASE+'data/harvest/'+st+'.json').then(function(j){hcache[st]=j;return j}).catch(function(){hcache[st]=null;return null})}
+function hv(id){var H=hcache[S.st];return H&&H.hunts?H.hunts[id]||null:null}
+function spct(v){return v==null?'—':Math.round(v)+'%'}
+function succCell(id){var x=hv(id);return x?'<b>'+spct(x.s)+'</b>'+(x.few?'<sup title="Few hunters reported">*</sup>':'')+'<br><span class="hfo-muted">'+x.k+' of '+x.h+'</span>':'<span class="hfo-muted">—</span>'}
 function stateName(st){for(var i=0;i<STATES.length;i++)if(STATES[i][0]==st)return STATES[i][1]}
 // ---------- odds math ----------
 function poolsFor(h,data){var keys=[];if(!data.split||h.all){if(h.all)keys.push('all')}
@@ -67,7 +71,7 @@ function weaponOf(n){n=n||'';if(/archery|\bbow|bowhunt/i.test(n))return 'archery
 function huntRows(data){var hs=data.hunts.filter(function(h){return h.sp==S.sp&&(S.weapon=='all'||weaponOf(h.name)==S.weapon)});var out=[];
   hs.forEach(function(h){var k=primary(h,data);if(!k)return;var rows=rowsFor(h,k,data);
     var q=h.q||{};var tags=k=='all'?q.all:(q[k]!=null?q[k]:(q.all!=null?q.all:null));
-    var lv=levelAt(rows,S.pts);out.push({h:h,k:k,rows:rows,n:lv?lv[1]:null,odds:oddsAt(h,k,data,S.pts),full:fullAt(rows),low:lowestDrew(rows),tags:tags,apps:rows.reduce(function(s,r){return s+(r[1]||0)},0)})});
+    var lv=levelAt(rows,S.pts);out.push({h:h,k:k,rows:rows,n:lv?lv[1]:null,odds:oddsAt(h,k,data,S.pts),full:fullAt(rows),low:lowestDrew(rows),tags:tags,apps:rows.reduce(function(s,r){return s+(r[1]||0)},0),succ:(hv(h.id)||{}).s})});
   return out}
 function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.st],v=r&&r.species[S.sp],nm=stateName(S.st);
   if(data===undefined){el.innerHTML='<p class="hfo-muted">Loading draw results…</p>';return}
@@ -76,12 +80,12 @@ function renderHunts(){var el=$('hfo-hunts'),data=cache[S.st],r=rules&&rules[S.s
   if(ql)list=list.filter(function(x){return (x.h.id+' '+x.h.name).toLowerCase().indexOf(ql)>=0});
   if(S.onlyMine)list=list.filter(function(x){return x.odds!=null&&x.odds>=0.75});
   var key=S.sort,d=S.dir;list.sort(function(a,b){var A=a[key],B=b[key];if(key=='id'){A=a.h.id;B=b.h.id;return A<B?-d:A>B?d:0}if(A==null)A=-1;if(B==null)B=-1;return (A-B)*d});
-  var pointsSys=gains(data);
-  var h='<h3>Every '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' hunt</h3><p class="hfo-muted">'+esc(spYear(data))+' draw results from '+srcLinks(data)+'. '+esc((S.sp=='elk'||S.sp=='deer'||S.st=='ak')?(data.about||''):'')+'</p>';
+  var pointsSys=gains(data);var HH=hcache[S.st],hasH=!!(HH&&HH.hunts&&list.some(function(x){return HH.hunts[x.h.id]}));
+  var h='<h3>Every '+esc(nm)+' '+esc((spName(S.sp)).toLowerCase())+' hunt</h3><p class="hfo-muted">'+esc(spYear(data))+' draw results from '+srcLinks(data)+'. '+(hasH?'Hunter success is from the '+esc(HH.survey)+'. ':'')+esc((S.sp=='elk'||S.sp=='deer'||S.st=='ak')?(data.about||''):'')+'</p>';
   spNotes(data).forEach(function(n){h+='<div class="hfo-note">'+esc(n)+'</div>'});
   h+='<div class="hfo-searchrow"><input type="search" id="hfo-q" placeholder="Search hunt code, unit or area" value="'+esc(S.q)+'"><label class="hfo-check"><input type="checkbox" id="hfo-mine" '+(S.onlyMine?'checked':'')+'> Only hunts I\'d likely draw (75%+)</label></div>';
-  h+='<div class="hfo-tablewrap"><table><thead><tr><th data-k="id">Hunt</th><th data-k="tags">Tags</th><th data-k="apps" class="hfo-x">Applicants</th><th data-k="odds">'+(pointsSys?'Odds at '+S.pts+' pts':'Draw odds')+'</th>'+(pointsSys?'<th data-k="full" class="hfo-x">Everyone drew at</th><th data-k="low" class="hfo-x">Lowest drew</th>':'')+'</tr></thead><tbody>';
-  list.slice(0,S.limit).forEach(function(x,i){h+='<tr class="hfo-row" data-i="'+esc(x.h.id)+'"><td><b>'+esc(x.h.id)+'</b><br><span class="hfo-muted">'+esc(x.h.name)+'</span></td><td>'+(x.tags==null?'—':x.tags)+'</td><td class="hfo-x">'+x.apps+'</td><td>'+pill(x.odds)+'</td>'+(pointsSys?'<td class="hfo-x">'+(x.full==null?'Not everyone':x.full+' pts')+'</td><td class="hfo-x">'+(x.low==null?'—':x.low+' pts')+'</td>':'')+'</tr>'});
+  h+='<div class="hfo-tablewrap"><table><thead><tr><th data-k="id">Hunt</th><th data-k="tags">Tags</th><th data-k="apps" class="hfo-x">Applicants</th><th data-k="odds">'+(pointsSys?'Odds at '+S.pts+' pts':'Draw odds')+'</th>'+(hasH?'<th data-k="succ">Hunter success</th>':'')+(pointsSys?'<th data-k="full" class="hfo-x">Everyone drew at</th><th data-k="low" class="hfo-x">Lowest drew</th>':'')+'</tr></thead><tbody>';
+  list.slice(0,S.limit).forEach(function(x,i){h+='<tr class="hfo-row" data-i="'+esc(x.h.id)+'"><td><b>'+esc(x.h.id)+'</b><br><span class="hfo-muted">'+esc(x.h.name)+'</span></td><td>'+(x.tags==null?'—':x.tags)+'</td><td class="hfo-x">'+x.apps+'</td><td>'+pill(x.odds)+'</td>'+(hasH?'<td>'+succCell(x.h.id)+'</td>':'')+(pointsSys?'<td class="hfo-x">'+(x.full==null?'Not everyone':x.full+' pts')+'</td><td class="hfo-x">'+(x.low==null?'—':x.low+' pts')+'</td>':'')+'</tr>'});
   h+='</tbody></table></div>';
   if(!list.length){var other=S.res=='res'?'nr':'res',saved=S.res;S.res=other;var n2=huntRows(data).length;S.res=saved;
     h+=(n2&&!S.q&&!S.onlyMine)?'<p>'+esc(nm)+' '+esc(spName(S.sp).toLowerCase())+' has no '+(S.res=='nr'?'nonresident':'resident')+' draw results. <button class="hfo-btn alt" type="button" id="hfo-swap">Show '+(other=='res'?'resident':'nonresident')+' results ('+n2+' hunts)</button></p>':'<p>No hunts match.</p>'}
@@ -113,6 +117,7 @@ function renderDetail(){var el=$('hfo-detail'),data=cache[S.st];if(!S.hunt||!dat
   if(!k){h+='<p>No '+(S.res=='res'?'resident':'nonresident')+' applicants or tags in this hunt last year'+(S.res=='nr'?' (it may be resident-only)':'')+'.</p>';el.innerHTML=h;bindClose();return}
   h+='<div class="hfo-big"><div class="hfo-stat"><b>'+pct(now)+'</b><span>'+(pointsSys?'chance last year with '+S.pts+' point'+(S.pts==1?'':'s')+(data.combine&&data.combine[k]?' (points draw + random draw)':''):'of applicants drew last year')+'</span></div>'+
      '<div class="hfo-stat"><b>'+pct(five)+'</b><span>chance of drawing at least once in 5 years'+(pointsSys?', gaining a point each year':'')+', if results look like last year</span></div>'+
+     (hv(h0.id)?'<div class="hfo-stat"><b>'+spct(hv(h0.id).s)+'</b><span>hunter success in '+esc(hcache[S.st].year)+' ('+hv(h0.id).k+' taken by '+hv(h0.id).h+(hv(h0.id).per_lic?' license holders':' hunters')+')</span></div>':'')+
      '<div class="hfo-stat"><b>'+(pointsSys?(full==null?'—':full):(h0.q&&h0.q[k]!=null?h0.q[k]:(h0.q&&h0.q.all!=null?h0.q.all:'—')))+'</b><span>'+(pointsSys?(full==null?'points where everyone drew (nobody was guaranteed)':'points where everyone drew last year'):(h0.q&&h0.q[k]!=null?'tags for this pool':'tags in this hunt'))+'</span></div></div>';
   var lvl=null;rows.forEach(function(r){if(r[0]!=null&&r[1]>0&&r[0]<=S.pts&&(lvl==null||r[0]>lvl[0]))lvl=r});if(pointsSys&&lvl&&lvl[1]<5)h+='<p class="hfo-muted">Only '+lvl[1]+' applicant'+(lvl[1]==1?'':'s')+' had '+lvl[0]+' point'+(lvl[0]==1?'':'s')+' last year, so treat that percentage with caution.</p>';
   if(pointsSys&&full!=null&&S.pts<full)h+='<p>You\'re <b>'+(full-S.pts)+' point'+(full-S.pts==1?'':'s')+'</b> short of a sure thing based on last year. Point creep often pushes that line up a point every year or two, so plan on a little longer.</p>';
@@ -121,6 +126,8 @@ function renderDetail(){var el=$('hfo-detail'),data=cache[S.st];if(!S.hunt||!dat
     h+='<h4>'+esc(POOLS[kk]||kk)+(h0.q&&h0.q[kk]!=null?' · '+h0.q[kk]+' tag'+(h0.q[kk]==1?'':'s'):'')+'</h4><div class="hfo-tablewrap"><table><thead><tr><th>'+(rr.length&&rr[0][0]!=null?'Points':'')+'</th><th>Applicants</th><th>'+(isEst?'Drew (est.)':'Drew')+'</th><th>Odds</th><th class="hfo-x"></th></tr></thead><tbody>';
     var lowest=rr.length?rr[rr.length-1]:null;rr.forEach(function(r){var p=r[1]?Math.min(1,r[2]/r[1]):null;var lump=data.lump&&r===lowest&&r[0]!=null&&rr.length>1;var me=r[0]!=null&&(r[0]==S.pts||(lump&&S.pts<=r[0]));h+='<tr'+(me?' class="hfo-me"':'')+'><td>'+(r[0]==null?'All':(lump?'≤ '+r[0]:r[0]))+(me?' ← you':'')+'</td><td>'+r[1]+'</td><td>'+(r[2]==null?'—':r[2])+'</td><td>'+pct(p)+'</td><td class="hfo-x" style="width:30%"><div class="hfo-bar"><i style="width:'+Math.round((p||0)*100)+'%"></i></div></td></tr>'});
     h+='</tbody></table></div>'});
+  var hx=hv(h0.id);if(hx){var bits=[];if(hx.r!=null)bits.push('residents '+spct(hx.r));if(hx.n!=null)bits.push('nonresidents '+spct(hx.n));if(hx.d)bits.push(hx.d+' hunter days per animal');if(hx.a!=null)bits.push('whole hunt area '+spct(hx.a)+' (all license types)');
+    h+='<p><b>Harvest:</b> '+spct(hx.s)+' of '+(hx.per_lic?'license holders':'hunters')+' took an animal in '+esc(hcache[S.st].year)+(bits.length?'; '+esc(bits.join(', ')):'')+'.'+(hx.few?' Few hunters reported for this hunt, so treat it with caution.':'')+' <span class="hfo-muted">Source: '+(hcache[S.st].sources||[]).slice(0,1).map(function(x){return '<a href="'+esc(x.url)+'" target="_blank" rel="noopener">'+esc(x.label)+'</a>'}).join('')+' and other '+esc(stateName(S.st))+' harvest reports.</span></p>'}
   if(h0.nr_note)h+='<p><b>Who can apply:</b> '+esc(h0.nr_note)+'</p>';
   if(h0.second&&h0.second.permits)h+='<p class="hfo-muted"><b>Second drawing:</b> '+h0.second.permits+' leftover tag'+(h0.second.permits==1?'':'s')+', '+h0.second.applicants+' first-choice applicants, '+h0.second.drawn+' drew.</p>';
   if(h0.drawn_out)h+='<p class="hfo-muted">Agency "drawn out at": residents '+esc(h0.drawn_out.res||'—')+', nonresidents '+esc(h0.drawn_out.nr||'—')+'.</p>';
@@ -191,11 +198,11 @@ function renderUnit(){var el=$('hfo-unit');if(!el){el=document.createElement('di
   var pointsSys=gains(data);
   var h='<h3>'+(pointsSys?'How many points does a unit take?':'What are the odds in a unit?')+'</h3><p class="hfo-muted">Pick a unit or area to see '+esc(nm)+' '+spn+' results: '+(pointsSys?'how many points it took to draw each hunt there last year, for residents and nonresidents.':'last year\'s draw odds for each hunt there. '+esc(nm)+' has no preference points, so everyone has the same chance.')+'</p>';
   h+='<div class="hfo-combo"><input type="search" id="hfo-uq" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="hfo-ulist" placeholder="Type a unit, e.g. '+esc(units.length?units[Math.min(5,units.length-1)][0]:'')+'" value="'+esc(S.unit||S.uq)+'"><ul id="hfo-ulist" role="listbox" hidden></ul></div>';
-  if(S.unit){var hs=data.hunts.filter(function(x){return x.sp==S.sp&&unitOf(x,S.st)==S.unit});hs.sort(function(a,b){return seasonKey(a)-seasonKey(b)});
+  if(S.unit){var hs=data.hunts.filter(function(x){return x.sp==S.sp&&unitOf(x,S.st)==S.unit});hs.sort(function(a,b){return seasonKey(a)-seasonKey(b)});var uH=hs.some(function(x){return hv(x.id)});
     h+='<div class="hfo-unithead"><b>'+esc(S.unit)+'</b> · '+hs.length+' '+spn+' hunt'+(hs.length==1?'':'s')+' · '+esc(spYear(data))+' results</div>';
     h+=coMissing(hs);
-    h+='<div class="hfo-tablewrap"><table class="hfo-unittable"><thead><tr><th>Hunt</th><th'+(S.res=='res'?' class="hfo-mycol"':'')+'>Residents'+(pointsSys?' need':'')+'</th><th'+(S.res=='nr'?' class="hfo-mycol"':'')+'>Nonresidents'+(pointsSys?' need':'')+'</th></tr></thead><tbody>';
-    hs.forEach(function(x){h+='<tr class="hfo-row" data-i="'+esc(x.id)+'"><td><b>'+esc(x.id)+'</b><br><span class="hfo-muted">'+esc(shortName(x,S.unit))+'</span></td>'+needCell(x,data,'res',pointsSys)+needCell(x,data,'nr',pointsSys)+'</tr>'});
+    h+='<div class="hfo-tablewrap"><table class="hfo-unittable"><thead><tr><th>Hunt</th><th'+(S.res=='res'?' class="hfo-mycol"':'')+'>Residents'+(pointsSys?' need':'')+'</th><th'+(S.res=='nr'?' class="hfo-mycol"':'')+'>Nonresidents'+(pointsSys?' need':'')+'</th>'+(uH?'<th>Hunter success</th>':'')+'</tr></thead><tbody>';
+    hs.forEach(function(x){h+='<tr class="hfo-row" data-i="'+esc(x.id)+'"><td><b>'+esc(x.id)+'</b><br><span class="hfo-muted">'+esc(shortName(x,S.unit))+'</span></td>'+needCell(x,data,'res',pointsSys)+needCell(x,data,'nr',pointsSys)+(uH?'<td>'+succCell(x.id)+'</td>':'')+'</tr>'});
     h+='</tbody></table></div><p class="hfo-muted" style="margin-top:10px">'+(pointsSys?'"Points needed" is the fewest points where everyone who applied drew last year. "Some drew with" is the lowest point level that got lucky'+(/bonus/.test(data.system||'')?' (in a bonus-point state, extra points only add chances)':'')+'. Expect point creep to push these up a bit each year. ':'')+'Click a hunt for the full breakdown.</p>'}
   el.innerHTML=h;
   var inp=$('hfo-uq'),ul=$('hfo-ulist'),act=-1;
@@ -225,7 +232,7 @@ function renderLottery(){var el=$('hfo-lottery');if(!el){el=document.createEleme
   el.innerHTML=h}
 function loadLots(){if(lots!==null)return;getJSON(BASE+'data/lotteries.json').then(function(j){lots=j;renderLottery()}).catch(function(){lots=false;renderLottery()})}
 function all(){renderControls();renderUnit();renderRules();renderBest();renderHunts();renderDetail();renderLottery()}
-function go(){loadLots();loadRules().then(function(){return loadState(S.st)}).then(all,all)}
+function go(){loadLots();var st=S.st;loadHarvest(st).then(function(){if(S.st==st)all()});loadRules().then(function(){return loadState(S.st)}).then(all,all)}
 // ---------- events ----------
 $('hfo-st').addEventListener('change',function(e){S.st=e.target.value;S.hunt=null;S.unit='';S.uq='';S.q='';S.limit=50;S.weapon='all';all();go()});
 $('hfo-sp').addEventListener('change',function(e){S.sp=e.target.value;S.hunt=null;S.unit='';S.uq='';S.limit=50;S.weapon='all';all()});
