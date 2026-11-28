@@ -13,6 +13,8 @@ Numbers are copied from public agency reports; where an agency doesn't publish w
 Hunter success from each state's own post-season harvest survey, keyed by the same hunt ids as `data/<state>.json` so the tool can show "Hunter success" beside draw odds. `s` = percent success, `h` = hunters, `k` = animals taken (see each file's `about`). Parsers live in `scripts/harvest/` (they read the agency PDFs after `pdftotext -layout`).
 
 - Wyoming: 2025 WGFD harvest reports (elk, deer, pronghorn, moose, sheep, goat, bison), matched by hunt area + license type.
+- New Mexico: NMDGF hunter harvest reports by hunt code (elk, deer, pronghorn, bighorn sheep); public and private land rows of one hunt code are added together.
+- Nevada: NDOW "Harvest by Unit Group" reports, matched to draw hunts by species, hunt type, weapon, units and season start; resident and nonresident rows added together.
 - Colorado: 2025 CPW harvest reports, which since 2025 are published by hunt code (elk, deer, pronghorn, moose, sheep, goat, bear). Includes over-the-counter codes.
 - Utah: 2025 preliminary big game harvest (all hunts by hunt number) plus 2025 bighorn sheep records.
 - Idaho: 2025 controlled hunt harvest statistics from the IDFG Hunt Planner (HTML tables).
@@ -20,7 +22,7 @@ Hunter success from each state's own post-season harvest survey, keyed by the sa
 
 ### Keeping it current
 
-`scripts/harvest/refresh.py` finds the newest harvest report for Wyoming, Utah, Idaho and Oregon, rebuilds the file, checks it (no impossible values, row count close to last time, never an older year) and only then writes it. GitHub Actions runs it weekly from February to June and monthly the rest of the year (`.github/workflows/harvest-refresh.yml`), commits any change and clears the jsDelivr cache. Colorado is included too: its report links are on the CPW species statistics pages, and the PDFs open in a JavaScript viewer, so the job opens each one in headless Chromium (`scripts/harvest/co_fetch.mjs`) to download it. No paid scraper is needed. CO only moves to a new year once all eight reports for that year are out.
+`scripts/harvest/refresh.py` finds the newest harvest report for Wyoming, Utah, Idaho, Oregon, New Mexico and Nevada, rebuilds the file, checks it (no impossible values, row count close to last time, never an older year) and only then writes it. GitHub Actions runs it weekly from February to June and monthly the rest of the year (`.github/workflows/harvest-refresh.yml`), commits any change and clears the jsDelivr cache. Colorado is included too: its report links are on the CPW species statistics pages, and the PDFs open in a JavaScript viewer, so the job opens each one in headless Chromium (`scripts/harvest/co_fetch.mjs`) to download it. No paid scraper is needed. CO only moves to a new year once all eight reports for that year are out.
 
 ## State hub summaries
 
