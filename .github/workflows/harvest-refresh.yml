@@ -18,10 +18,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install pdftotext
         run: sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils
-      - name: Refresh WY, UT, ID, OR
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - name: Install headless Chromium (Colorado's reports open in a JavaScript viewer)
+        run: npm install --no-save --no-package-lock playwright@1.49.1 && npx playwright install --with-deps chromium
+      - name: Refresh WY, UT, ID, OR, CO
         id: run
         continue-on-error: true
-        run: python3 scripts/harvest/refresh.py wy ut id or | tee refresh.log
+        run: set -o pipefail; python3 scripts/harvest/refresh.py wy ut id or co | tee refresh.log
       - name: Rebuild state hub summaries
         run: |
           python3 scripts/hub/build.py
