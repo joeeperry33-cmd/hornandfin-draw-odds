@@ -173,6 +173,19 @@ def nv():
     src = [{'label': f'NDOW {year} {n.replace("-", " ")} Harvest by Unit Group', 'url': u} for n, u in sorted(files[year].items())]
     return year, f'{year} big game hunt statistics (Nevada Department of Wildlife)', src, H
 
+def az():
+    cfg = json.load(open(os.path.join(REPO, 'data', 'harvest', 'az_sources.json')))
+    for f in os.listdir(RAW):
+        if f.startswith('az_'): os.remove(os.path.join(RAW, f))
+    for sp, u in cfg['files'].items():
+        save_pdf(u, 'az_' + sp)
+    run('az_build.py')
+    H = json.load(open(os.path.join(WORK, 'az_harvest_raw.json')))
+    y = cfg['year']
+    names = {'elk': 'Elk', 'deer': 'Deer', 'pronghorn': 'Pronghorn', 'sheep': 'Bighorn Sheep'}
+    src = [{'label': f'AZGFD {y} {names[sp]} Harvest Summary', 'url': u.replace('https://azgfd-live-portal-wordpress-pantheon.s3.us-west-2.amazonaws.com', 'https://www.azgfd.com')} for sp, u in cfg['files'].items()]
+    return y, f'{y} hunt harvest summaries (Arizona Game and Fish Department)', src, H
+
 CO_PAGES = [  # (species stats page, [file names in co_build.py, in page order])
     ('hunting-elk/elk-statistics', ['co_elk']),
     ('hunting-deer/deer-statistics', ['co_deer']),
@@ -212,7 +225,7 @@ def co():
     src = [{'label': f'CPW {year} {CO_LABEL[n]} Harvest Report', 'url': u} for n, (y, u) in found.items()]
     return year, f'{year} Big Game Harvest Survey (Colorado Parks and Wildlife), by hunt code', src, H
 
-STATES = {'wy': wy, 'ut': ut, 'id': id_, 'or': or_, 'co': co, 'nm': nm, 'nv': nv}
+STATES = {'wy': wy, 'ut': ut, 'id': id_, 'or': or_, 'co': co, 'nm': nm, 'nv': nv, 'az': az}
 
 # ---------- checks + write ----------
 def check_and_write(st, year, survey, sources, H):

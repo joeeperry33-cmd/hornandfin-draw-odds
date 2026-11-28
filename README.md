@@ -14,6 +14,7 @@ Hunter success from each state's own post-season harvest survey, keyed by the sa
 
 - Wyoming: 2025 WGFD harvest reports (elk, deer, pronghorn, moose, sheep, goat, bison), matched by hunt area + license type.
 - New Mexico: NMDGF hunter harvest reports by hunt code (elk, deer, pronghorn, bighorn sheep); public and private land rows of one hunt code are added together.
+- Arizona: AZGFD hunt harvest summaries (elk, deer, pronghorn, bighorn sheep). The PDF links are listed in data/harvest/az_sources.json because azgfd.com blocks automated page checks; the PDFs are read from Arizona's file server. Hunt numbers carry over between years; a match needs the same units too, and a nearby number in the same block is used when a hunt was renumbered.
 - Nevada: NDOW "Harvest by Unit Group" reports, matched to draw hunts by species, hunt type, weapon, units and season start; resident and nonresident rows added together.
 - Colorado: 2025 CPW harvest reports, which since 2025 are published by hunt code (elk, deer, pronghorn, moose, sheep, goat, bear). Includes over-the-counter codes.
 - Utah: 2025 preliminary big game harvest (all hunts by hunt number) plus 2025 bighorn sheep records.
