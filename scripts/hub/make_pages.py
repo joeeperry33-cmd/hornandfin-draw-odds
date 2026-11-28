@@ -59,7 +59,7 @@ CSS = """<style>
 .hf-guide .hf-hub-sub{font-size:17px;line-height:1.45;color:#E9E2D3;max-width:460px}
 .hf-guide .hf-hub-facts{display:grid;grid-template-columns:120px repeat(4,minmax(0,1fr));gap:0;background:#fff;border:1px solid #E3D9C6;border-radius:14px;margin:0 0 1.6em;overflow:hidden}
 .hf-guide .hf-hub-flag{display:flex;align-items:center;justify-content:center;padding:14px;background:#FBF8F2;border-right:1px solid #F0E9DB}
-.hf-guide .hf-hub-flag img{width:100%;height:auto;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.hf-guide .hf-hub-flagimg{display:block;width:100%;aspect-ratio:3/2;background:center/contain no-repeat;border-radius:4px}
 .hf-guide .hf-hub-fact{padding:14px 16px;border-right:1px solid #F0E9DB}
 .hf-guide .hf-hub-fact:last-child{border-right:0}
 .hf-guide .hf-hub-fact b{display:block;font:700 12px "Barlow Condensed",sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#8A7F6A;margin:0 0 4px}
@@ -82,7 +82,7 @@ CSS = """<style>
 .hf-guide a.hf-sg-out{font:700 14px "Barlow Condensed",sans-serif;letter-spacing:.08em;text-transform:uppercase;color:#C4561A;text-decoration:none}
 .hf-guide h2[id]{scroll-margin-top:90px}
 body:has(.hf-hub-hero) .page-header{display:none}
-@media (max-width:760px){.hf-guide .hf-hub-facts{grid-template-columns:1fr 1fr!important}.hf-guide .hf-hub-flag{grid-column:1/-1;border-right:0;border-bottom:1px solid #F0E9DB}.hf-guide .hf-hub-flag img{max-width:160px}.hf-guide .hf-hub-fact{border-bottom:1px solid #F0E9DB}}
+@media (max-width:760px){.hf-guide .hf-hub-facts{grid-template-columns:1fr 1fr!important}.hf-guide .hf-hub-flag{grid-column:1/-1;border-right:0;border-bottom:1px solid #F0E9DB}.hf-guide .hf-hub-flagimg{max-width:160px}.hf-guide .hf-hub-fact{border-bottom:1px solid #F0E9DB}}
 @media (max-width:640px){.hf-guide .hf-sg-grid{grid-template-columns:1fr}.hf-guide .hf-hub-hero{flex-direction:column;align-items:flex-start;gap:14px;padding:20px}.hf-guide .hf-hub-map{width:130px;flex-basis:auto}.hf-guide .hf-hub-title{font-size:48px}}
 </style>"""
 
@@ -108,7 +108,7 @@ def facts_strip(st, name, f):
         if f.get(k):
             cells.append((lab, f'<span>{e(f[k])}</span>'))
     cells = cells[:4]
-    h = f'<div class="hf-hub-facts" style="grid-template-columns:120px repeat({len(cells)},minmax(0,1fr))"><div class="hf-hub-flag"><img src="{CDN}data/flags/{st}.webp" alt="Flag of {e(name)}" width="300" height="200" loading="lazy"></div>'
+    h = f'<div class="hf-hub-facts" style="grid-template-columns:120px repeat({len(cells)},minmax(0,1fr))"><div class="hf-hub-flag"><span class="hf-hub-flagimg" role="img" aria-label="Flag of {e(name)}" style="background-image:url({CDN}data/flags/{st}.webp)"></span></div>'
     for lab, v in cells:
         h += f'<div class="hf-hub-fact"><b>{lab}</b>{v}</div>'
     return h + '</div>'
