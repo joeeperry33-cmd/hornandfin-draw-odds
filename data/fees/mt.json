@@ -1,0 +1,77 @@
+{
+ "state": "mt",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Montana FWP 2026 deer, elk and antelope regulations",
+   "url": "https://fwp.mt.gov/hunt/regulations"
+  },
+  {
+   "name": "Montana FWP 2026 moose, sheep, goat and bison regulations",
+   "url": "https://fwp.mt.gov/hunt/regulations"
+  }
+ ],
+ "base": [
+  {
+   "res": 10,
+   "nr": 50,
+   "label": "Base hunting license"
+  },
+  {
+   "res": 8,
+   "nr": 10,
+   "label": "Conservation license"
+  }
+ ],
+ "app": null,
+ "note": "Resident elk and deer permits are used with the general license; the cost shown includes both. Nonresident elk and deer combinations include fishing and upland bird.",
+ "species": {
+  "elk": {
+   "res": 29,
+   "nr": 1121,
+   "label": "General elk license + elk permit (NR elk combination)",
+   "rules": [
+    {
+     "m": "Elk B License|antlerless",
+     "res": 25,
+     "nr": 275,
+     "label": "Elk B license (antlerless)"
+    }
+   ]
+  },
+  "deer": {
+   "res": 21,
+   "nr": 765,
+   "label": "General deer license + deer permit (NR deer combination)",
+   "rules": [
+    {
+     "m": "Deer B License|antlerless",
+     "res": 15,
+     "nr": 80,
+     "label": "Deer B license (antlerless)"
+    }
+   ]
+  },
+  "antelope": {
+   "res": 19,
+   "nr": 205,
+   "label": "Antelope license"
+  },
+  "moose": {
+   "res": 125,
+   "nr": 1250,
+   "label": "Moose license"
+  },
+  "sheep": {
+   "res": 125,
+   "nr": 1250,
+   "label": "Bighorn sheep license"
+  },
+  "goat": {
+   "res": 125,
+   "nr": 1250,
+   "label": "Mountain goat license"
+  }
+ }
+}

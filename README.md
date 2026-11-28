@@ -42,3 +42,11 @@ harvest refresh rebuilds them too. `tool/hub.js` renders the lists on the state 
 `scripts/national/build.js` builds it using the odds math copied at build time from `tool/hfo.js`, so the
 compare page and the draw odds tool always agree. `tool/compare.js` renders the page (`<div id="hf-compare">`).
 Both summaries are rebuilt by `hub-build.yml` and by the harvest refresh.
+
+## License fees (data/fees)
+
+`data/fees/<st>.json` holds each state's hunting license, required stamps and tag prices for residents and nonresidents, with links to the official fee pages. Each species has a default tag price and optional `rules` (a regex on the hunt name, first match wins) for antlerless, premium or multiseason tags. A `null` price means that group can't buy the tag (for example New Mexico antlerless elk for nonresidents).
+
+The national build adds `c: [resident, nonresident]` (license + stamps + tag, whole dollars, no application or point fees) to each hunt, and the hub build adds it to the hub lists. The Compare hunts page uses it for the "Cheapest" sort and the "License + tag" column. Fees change about once a year: update the JSON and push; hub-build.yml rebuilds everything.
+
+States with fees so far: AZ, CA, CO, ID, MT, NM, NV, OR, UT, WY (checked Nov 28 2026).

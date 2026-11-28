@@ -8,7 +8,7 @@ the full draw data, so they stay fast and update whenever the data changes.
 
 Usage: python3 scripts/hub/build.py   (all states that have harvest data)
 """
-import json, os, sys
+import json, os, re, sys
 
 REPO = os.environ.get('HF_REPO', '.')
 MIN_HUNTERS = 25
@@ -34,6 +34,26 @@ def easy_draw(r):
     return any(v is not None and v <= 2 for v in vals)
 
 
+def load_fees(st):
+    p = os.path.join(REPO, 'data', 'fees', st + '.json')
+    return json.load(open(p)) if os.path.exists(p) else None
+
+
+def cost_of(fees, sp, name):
+    """License + required stamps + tag, as [resident, nonresident] whole dollars (None if not sold)."""
+    if not fees or sp not in fees.get('species', {}):
+        return None
+    e = fees['species'][sp]
+    t = next((r for r in e.get('rules', []) if re.search(r['m'], name or '', re.I)), e)
+    out = []
+    for k in ('res', 'nr'):
+        if t.get(k) is None:
+            out.append(None)
+            continue
+        out.append(round(t[k] + sum(b.get(k) or 0 for b in fees.get('base', []))))
+    return out
+
+
 def main():
     hdir = os.path.join(REPO, 'data', 'harvest')
     out_dir = os.path.join(REPO, 'data', 'hub')
@@ -48,6 +68,7 @@ def main():
         harv = json.load(open(os.path.join(hdir, fn)))
         draw = json.load(open(dpath))
         hv = harv.get('hunts', {})
+        fees = load_fees(st)
         by_sp = {}
         for h in draw.get('hunts', []):
             x = hv.get(h['id'])
@@ -56,6 +77,9 @@ def main():
             row = {'id': h['id'], 'name': h.get('name', ''), 's': x['s'], 'h': x['h'], 'k': x.get('k')}
             if h.get('drawn_out'):
                 row['pts'] = h['drawn_out']
+            c = cost_of(fees, h.get('sp'), h.get('name'))
+            if c:
+                row['c'] = c
             by_sp.setdefault(h.get('sp', 'other'), []).append(row)
         species = {}
         for sp, rows in by_sp.items():
@@ -73,6 +97,8 @@ def main():
             'min_hunters': MIN_HUNTERS,
             'species': species,
         }
+        if fees:
+            out['fees'] = {'year': fees.get('year'), 'sources': fees.get('sources'), 'note': fees.get('note', '')}
         path = os.path.join(out_dir, st + '.json')
         new = json.dumps(out, separators=(',', ':'), ensure_ascii=False)
         old = open(path).read() if os.path.exists(path) else None

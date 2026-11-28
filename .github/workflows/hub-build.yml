@@ -4,7 +4,7 @@ name: Rebuild hub and national summaries
 on:
   push:
     branches: [main]
-    paths: ['data/*.json', 'data/harvest/**', 'scripts/hub/**', 'scripts/national/**', 'tool/hfo.js']
+    paths: ['data/*.json', 'data/harvest/**', 'data/fees/**', 'scripts/hub/**', 'scripts/national/**', 'tool/hfo.js']
   workflow_dispatch:
 permissions:
   contents: write

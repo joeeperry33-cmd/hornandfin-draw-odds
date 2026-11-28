@@ -1,0 +1,56 @@
+{
+ "state": "or",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Oregon Department of Fish and Wildlife license fee schedule (2026 column)",
+   "url": "https://myodfw.com/sites/default/files/2025-11/Rec_License_Fee_Schedule.pdf"
+  }
+ ],
+ "base": [
+  {
+   "res": 39,
+   "nr": 193,
+   "label": "Hunting license"
+  }
+ ],
+ "app": {
+  "res": 10,
+  "nr": 10,
+  "label": "Controlled hunt application"
+ },
+ "note": "",
+ "species": {
+  "elk": {
+   "res": 56,
+   "nr": 660,
+   "label": "Elk tag"
+  },
+  "deer": {
+   "res": 33,
+   "nr": 500,
+   "label": "Deer tag"
+  },
+  "antelope": {
+   "res": 58,
+   "nr": 443,
+   "label": "Pronghorn tag"
+  },
+  "sheep": {
+   "res": 159,
+   "nr": 1695,
+   "label": "Bighorn sheep tag"
+  },
+  "goat": {
+   "res": 159,
+   "nr": 1695,
+   "label": "Mountain goat tag"
+  },
+  "bear": {
+   "res": 16.5,
+   "nr": 16.5,
+   "label": "Black bear tag"
+  }
+ }
+}

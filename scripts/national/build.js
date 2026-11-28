@@ -21,6 +21,21 @@ const A = ctx.api;
 const skip = new Set(['rules.json', 'lotteries.json']);
 const rules = JSON.parse(fs.readFileSync(path.join(REPO, 'data/rules.json'), 'utf8'));
 const bySp = {};
+// license fees: data/fees/<st>.json. Cost to hunt = required licenses/stamps + the tag for that hunt.
+const fees = {}; const feeDir = path.join(REPO, 'data/fees');
+if (fs.existsSync(feeDir)) for (const fn of fs.readdirSync(feeDir)) if (fn.endsWith('.json')) fees[fn.slice(0, -5)] = JSON.parse(fs.readFileSync(path.join(feeDir, fn), 'utf8'));
+function costOf(st, sp, name) {
+  const f = fees[st]; if (!f || !f.species || !f.species[sp]) return null;
+  const e = f.species[sp]; let t = e;
+  for (const r of e.rules || []) if (new RegExp(r.m, 'i').test(name || '')) { t = r; break; }
+  const out = {};
+  for (const k of ['res', 'nr']) {
+    if (t[k] == null) { out[k] = null; continue; }
+    let c = t[k]; for (const b of f.base || []) c += b[k] || 0;
+    out[k] = Math.round(c);
+  }
+  return out;
+}
 for (const fn of fs.readdirSync(path.join(REPO, 'data')).sort()) {
   if (!fn.endsWith('.json') || skip.has(fn)) continue;
   const st = fn.slice(0, -5);
@@ -46,6 +61,7 @@ for (const fn of fs.readdirSync(path.join(REPO, 'data')).sort()) {
     const x = harv && harv.hunts && harv.hunts[h.id];
     if (x && x.s != null) { row.s = x.s; row.h = x.h; if (x.few) row.few = 1; }
     if (/private land/i.test(h.name || '')) row.pl = 1;
+    const c = costOf(st, h.sp, h.name); if (c) row.c = [c.res, c.nr];
     (bySp[h.sp] = bySp[h.sp] || []).push(row);
   }
 }
@@ -63,6 +79,8 @@ for (const fn of fs.readdirSync(path.join(REPO, 'data'))) {
   if (!fn.endsWith('.json') || skip.has(fn)) continue;
   const d = JSON.parse(fs.readFileSync(path.join(REPO, 'data', fn), 'utf8')); index.years[fn.slice(0, -5)] = d.year;
 }
+index.fees = {};
+for (const [st, f] of Object.entries(fees)) index.fees[st] = { year: f.year, checked: f.checked, sources: f.sources, note: f.note || '', base: (f.base || []).map(b => b.label) };
 const itxt = JSON.stringify(index);
 const ifile = path.join(outDir, 'index.json');
 if (!fs.existsSync(ifile) || fs.readFileSync(ifile, 'utf8') !== itxt) { fs.writeFileSync(ifile, itxt); console.log('wrote', ifile); }

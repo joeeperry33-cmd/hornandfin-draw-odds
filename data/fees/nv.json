@@ -1,0 +1,64 @@
+{
+ "state": "nv",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Nevada big game licenses and tag fees (eRegulations, NDOW)",
+   "url": "https://www.eregulations.com/nevada/hunting/big-game/licenses-tag-fees"
+  }
+ ],
+ "base": [
+  {
+   "res": 38,
+   "nr": 155,
+   "label": "Hunting license (NR: hunting & fishing combination)"
+  }
+ ],
+ "app": {
+  "res": 14,
+  "nr": 14,
+  "label": "Application, tag application and processing fees"
+ },
+ "note": "Elk applications add a $5 elk damage fee.",
+ "species": {
+  "elk": {
+   "res": 120,
+   "nr": 1200,
+   "label": "Elk tag",
+   "rules": [
+    {
+     "m": "antlerless|cow",
+     "res": 120,
+     "nr": 500,
+     "label": "Antlerless elk tag"
+    }
+   ]
+  },
+  "deer": {
+   "res": 30,
+   "nr": 240,
+   "label": "Deer tag"
+  },
+  "antelope": {
+   "res": 60,
+   "nr": 300,
+   "label": "Antelope tag"
+  },
+  "sheep": {
+   "res": 120,
+   "nr": 1200,
+   "label": "Bighorn sheep tag"
+  },
+  "goat": {
+   "res": 120,
+   "nr": 1200,
+   "label": "Mountain goat tag"
+  },
+  "bear": {
+   "res": 100,
+   "nr": 300,
+   "label": "Black bear tag"
+  }
+ }
+}

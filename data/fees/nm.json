@@ -1,0 +1,78 @@
+{
+ "state": "nm",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "New Mexico Department of Game and Fish 2026-27 draw license fees",
+   "url": "https://wildlife.dgf.nm.gov/hunting/applications-and-draw-information"
+  },
+  {
+   "name": "Hunting licenses and fees (eRegulations, NMDGF)",
+   "url": "https://www.eregulations.com/newmexico/hunting/hunting-licenses-and-fees"
+  }
+ ],
+ "base": [
+  {
+   "res": 15,
+   "nr": 65,
+   "label": "Game-hunting license"
+  },
+  {
+   "res": 10,
+   "nr": 10,
+   "label": "Habitat stamp"
+  },
+  {
+   "res": 4,
+   "nr": 4,
+   "label": "Habitat management & access validation"
+  }
+ ],
+ "app": null,
+ "note": "Draw license fees include the $7 resident / $13 nonresident application fee. Nonresident quality and high-demand hunts cost more ($998 elk, $623 deer). Nonresidents cannot apply for antlerless elk.",
+ "species": {
+  "elk": {
+   "res": 100,
+   "nr": 773,
+   "label": "Elk license",
+   "rules": [
+    {
+     "m": "\\(A\\)|antlerless",
+     "res": 70,
+     "nr": null,
+     "label": "Antlerless elk license"
+    },
+    {
+     "m": "youth|junior|senior",
+     "res": 70,
+     "nr": 773,
+     "label": "Junior/senior elk license"
+    }
+   ]
+  },
+  "deer": {
+   "res": 60,
+   "nr": 398,
+   "label": "Deer license"
+  },
+  "antelope": {
+   "res": 70,
+   "nr": 423,
+   "label": "Pronghorn license"
+  },
+  "sheep": {
+   "res": 160,
+   "nr": 3523,
+   "label": "Bighorn ram license",
+   "rules": [
+    {
+     "m": "ewe",
+     "res": 85,
+     "nr": 3523,
+     "label": "Bighorn ewe license"
+    }
+   ]
+  }
+ }
+}

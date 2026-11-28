@@ -1,0 +1,74 @@
+{
+ "state": "az",
+ "checked": "2026-11-28",
+ "year": 2026,
+ "sources": [
+  {
+   "name": "Arizona Administrative Code R12-4-102 (license and tag fees)",
+   "url": "https://www.law.cornell.edu/regulations/arizona/Ariz-Admin-Code-SS-R12-4-102"
+  },
+  {
+   "name": "Arizona hunting licenses and fees (eRegulations, AZGFD)",
+   "url": "https://www.eregulations.com/arizona/hunting/hunting-licenses-fees"
+  }
+ ],
+ "base": [
+  {
+   "res": 37,
+   "nr": 160,
+   "label": "Hunting license (NR: combination hunt & fish)"
+  }
+ ],
+ "app": {
+  "res": 13,
+  "nr": 15,
+  "label": "Draw application fee"
+ },
+ "note": "",
+ "species": {
+  "elk": {
+   "res": 135,
+   "nr": 650,
+   "label": "Elk hunt permit-tag"
+  },
+  "deer": {
+   "res": 45,
+   "nr": 300,
+   "label": "Deer hunt permit-tag"
+  },
+  "antelope": {
+   "res": 90,
+   "nr": 550,
+   "label": "Pronghorn hunt permit-tag"
+  },
+  "sheep": {
+   "res": 300,
+   "nr": 1800,
+   "label": "Bighorn sheep hunt permit-tag"
+  },
+  "bison": {
+   "res": 1100,
+   "nr": 5400,
+   "label": "Bison hunt permit-tag",
+   "rules": [
+    {
+     "m": "yearling",
+     "res": 350,
+     "nr": 1750,
+     "label": "Yearling bison"
+    },
+    {
+     "m": "cow",
+     "res": 650,
+     "nr": 3250,
+     "label": "Cow bison"
+    }
+   ]
+  },
+  "bear": {
+   "res": 25,
+   "nr": 150,
+   "label": "Bear hunt permit-tag"
+  }
+ }
+}

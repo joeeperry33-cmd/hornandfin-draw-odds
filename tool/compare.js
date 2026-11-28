@@ -41,11 +41,14 @@ function css(){var s=document.createElement('style');s.textContent=
 '#hf-compare .hc-tag{display:inline-block;margin-left:6px;padding:1px 6px;border-radius:4px;background:#F3E6D3;color:#8A4B12;font-size:12px;font-weight:700}'+
 '#hf-compare .p-hi{color:#2F5D2A}#hf-compare .p-mid{color:#9A6A12}#hf-compare .p-lo{color:#A33A1A}#hf-compare .p-na{color:#9A9180;font-weight:500}'+
 '#hf-compare .hc-more{display:block;margin:14px auto 0;padding:10px 18px;border:0;border-radius:8px;background:#E8641B;color:#fff;font:700 15px "Barlow Condensed",sans-serif;letter-spacing:.08em;text-transform:uppercase;cursor:pointer}'+
+'#hf-compare td.hc-c{font-weight:600;color:#1A2312;white-space:nowrap}'+
 '#hf-compare .hc-foot{font-size:13px;color:#6B6252;margin:12px 0 0}'+
 '@media (max-width:700px){#hf-compare .hc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}#hf-compare .hc-hide{display:none}#hf-compare td,#hf-compare th{padding:7px 4px}}';
 document.head.appendChild(s)}
 function oddsFor(h){var home=S.home&&S.home==h.st;var p=home?h.res:h.nr;if(!p)return null;var o=p.o,L=(index&&index.levels)||[0];
   if(typeof o=='number')return {v:o,p:p,res:home};var i=0;for(var j=0;j<L.length;j++)if(L[j]<=S.pts)i=j;var v=o[i];return {v:v,p:p,res:home}}
+function costOf(h,o){if(!h.c)return null;var v=h.c[o.res?0:1];return v==null?null:v}
+function feeNote(){var f=index&&index.fees;if(!f)return '';var have=Object.keys(f).sort().map(function(s){return s.toUpperCase()});return ' Fees are listed for '+have.join(', ')+' so far.'}
 function cls(v){return v==null?'p-na':v>=60?'p-hi':v>=20?'p-mid':'p-lo'}
 function fmt(v){return v==null?'—':(v>=99.5?'100%':v>0&&v<1?'<1%':Math.round(v)+'%')}
 function unitOf(n){var m=/^(GMU|Unit|Units|Area|HD|Hunt Area|District|Zone)\s*[\w-]+/i.exec(n||'');return m?m[0]:''}
@@ -58,7 +61,7 @@ function build(){root.innerHTML='<div class="hc-panel"><div class="hc-grid">'+
   '<div><label for="hc-sex">Animal</label><select id="hc-sex"><option value="">Any</option><option value="m">Antlered, horned or either-sex</option><option value="f">Antlerless only</option></select></div>'+
   '<div><label for="hc-min">Min. hunter success</label><select id="hc-min"><option value="0">Any</option><option value="25">25%+</option><option value="50">50%+</option><option value="75">75%+</option></select></div>'+
   '</div><label class="hc-chk"><input type="checkbox" id="hc-pub"> Hide private-land-only hunts</label>'+
-  '<div class="hc-sorts" role="group" aria-label="Sort by"><button type="button" class="hc-sort" data-s="odds">Best draw odds</button><button type="button" class="hc-sort" data-s="succ">Highest hunter success</button><button type="button" class="hc-sort" data-s="value">Best overall chance</button></div></div>'+
+  '<div class="hc-sorts" role="group" aria-label="Sort by"><button type="button" class="hc-sort" data-s="odds">Best draw odds</button><button type="button" class="hc-sort" data-s="succ">Highest hunter success</button><button type="button" class="hc-sort" data-s="value">Best overall chance</button><button type="button" class="hc-sort" data-s="cheap">Cheapest</button></div></div>'+
   '<div class="hc-panel" id="hc-out"><p class="hc-sum">Loading hunts…</p></div>';
   var sp=$('hc-sp');ORDER.forEach(function(k){if(index.species[k])sp.add(new Option(SPN[k]||k,k))});sp.value=S.sp;
   var hm=$('hc-home');ALLST.forEach(function(s){hm.add(new Option(s[1],s[0]))});hm.value=S.home;
@@ -79,21 +82,22 @@ function render(){writeQS();Array.prototype.forEach.call(root.querySelectorAll('
   var d=cache[S.sp];if(!d)return;var rows=[];
   d.hunts.forEach(function(h){if(S.st&&h.st!=S.st)return;if(S.w&&h.w!=S.w)return;if(S.pub&&h.pl)return;if(S.sex&&sexOf(h.n)!=S.sex)return;
     if(S.minS&&!(succOK(h)&&h.s>=S.minS))return;var o=oddsFor(h);if(!o||o.v==null)return;
-    if(S.sort=='succ'&&!succOK(h))return;
-    var val=succOK(h)?o.v*h.s/100:-1;rows.push({h:h,o:o,val:val})});
-  var key=S.sort=='succ'?function(r){return [r.h.s,r.o.v]}:S.sort=='value'?function(r){return [r.val,r.o.v]}:function(r){return [r.o.v,succOK(r.h)?r.h.s:-1]};
+    if(S.sort=='succ'&&!succOK(h))return;var c=costOf(h,o);
+    if(S.sort=='cheap'&&(c==null||!(o.v>0)))return;
+    var val=succOK(h)?o.v*h.s/100:-1;rows.push({h:h,o:o,val:val,c:c})});
+  var key=S.sort=='cheap'?function(r){return [-r.c,r.o.v]}:S.sort=='succ'?function(r){return [r.h.s,r.o.v]}:S.sort=='value'?function(r){return [r.val,r.o.v]}:function(r){return [r.o.v,succOK(r.h)?r.h.s:-1]};
   rows.sort(function(a,b){var A=key(a),B=key(b);return (B[0]-A[0])||(B[1]-A[1])||((b.o.p.t||0)-(a.o.p.t||0))});
   var who=S.home?(S.home=='xx'?'a nonresident everywhere':'a resident of '+(ALLST.filter(function(s){return s[0]==S.home})[0]||['',''])[1]+' (nonresident elsewhere)'):'a nonresident (choose your state to see resident odds at home)';
   var h='<p class="hc-sum"><b>'+rows.length.toLocaleString()+'</b> '+esc((SPN[S.sp]||S.sp).toLowerCase())+' hunts'+(S.st?' in '+esc(ST[S.st]||S.st):' across '+(index.species[S.sp].states.length)+' states')+'. Odds are for '+esc(who)+' with '+S.pts+' point'+(S.pts==1?'':'s')+'.</p>';
-  h+='<div style="overflow-x:auto"><table><thead><tr><th>Hunt</th><th class="hc-n">Draw odds</th><th class="hc-n">Hunter success</th><th class="hc-n hc-hide">Tags</th></tr></thead><tbody>';
+  h+='<div style="overflow-x:auto"><table><thead><tr><th>Hunt</th><th class="hc-n">Draw odds</th><th class="hc-n">Hunter success</th><th class="hc-n">License + tag</th><th class="hc-n hc-hide">Tags</th></tr></thead><tbody>';
   rows.slice(0,S.limit).forEach(function(r){var x=r.h,u=unitOf(x.n),href='/hunting-guides/draw-odds/?state='+x.st+'&species='+S.sp+'&res='+(r.o.res?'res':'nr')+(u?'&unit='+encodeURIComponent(u):'');
     var meta=[esc(x.id),(W[x.w]||'')];if(r.o.p.a)meta.push(r.o.p.a.toLocaleString()+(r.o.p.a==1?' applicant':' applicants'));if(x.h)meta.push(x.h.toLocaleString()+' hunters');
     if(x.g&&r.o.p.f!=null)meta.push('sure draw at '+r.o.p.f+' pts');
     h+='<tr><td><span class="hc-st">'+x.st.toUpperCase()+'</span><a class="hc-h" href="'+href+'">'+esc(x.n||x.id)+'</a>'+(x.pl?'<span class="hc-tag">Private land</span>':'')+'<div class="hc-m">'+meta.filter(Boolean).join(' · ')+'</div></td>'+
-      '<td class="hc-n '+cls(r.o.v)+'">'+fmt(r.o.v)+'</td><td class="hc-n '+cls(x.s)+'">'+(x.s!=null?fmt(x.s)+(x.few?'*':''):'<span class="p-na">—</span>')+'</td><td class="hc-n hc-hide" style="font-weight:500">'+(r.o.p.t!=null?r.o.p.t:'—')+'</td></tr>'});
+      '<td class="hc-n '+cls(r.o.v)+'">'+fmt(r.o.v)+'</td><td class="hc-n '+cls(x.s)+'">'+(x.s!=null?fmt(x.s)+(x.few?'*':''):'<span class="p-na">—</span>')+'</td><td class="hc-n hc-c">'+(r.c!=null?'$'+r.c.toLocaleString():'<span class="p-na">—</span>')+'</td><td class="hc-n hc-hide" style="font-weight:500">'+(r.o.p.t!=null?r.o.p.t:'—')+'</td></tr>'});
   h+='</tbody></table></div>';
   if(rows.length>S.limit)h+='<button type="button" class="hc-more" id="hc-more">Show more hunts</button>';
-  h+='<p class="hc-foot">Draw odds are last year’s official results at your point level, from each state wildlife agency. Points don’t transfer between states, so this assumes you hold the same number of points in each state. Hunter success is from state harvest surveys where published; hunts with fewer than 10 hunters are marked * and left out of success rankings. "Best overall chance" multiplies draw odds by hunter success. Tap a hunt for its full draw results.</p>';
+  h+='<p class="hc-foot">Draw odds are last year’s official results at your point level, from each state wildlife agency. Points don’t transfer between states, so this assumes you hold the same number of points in each state. Hunter success is from state harvest surveys where published; hunts with fewer than 10 hunters are marked * and left out of success rankings. "Best overall chance" multiplies draw odds by hunter success. License + tag is what you’d pay the state if drawn: the hunting license and required stamps plus the tag, at this year’s resident or nonresident price, not counting application or point fees.'+feeNote()+' Tap a hunt for its full draw results.</p>';
   $('hc-out').innerHTML=h;var m=$('hc-more');if(m)m.onclick=function(){S.limit+=40;render()}}
 function init(){root=$('hf-compare');if(!root)return;css();readQS();get(BASE+'data/national/index.json').then(function(ix){index=ix;if(!ix.species[S.sp])S.sp='elk';build();load()}).catch(function(){root.innerHTML='<p>Couldn’t load the hunt list. Please try again.</p>'})}
 if(document.readyState=='loading')document.addEventListener('DOMContentLoaded',init);else init();
