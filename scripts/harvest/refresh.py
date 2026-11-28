@@ -3,8 +3,8 @@
 Run from the repo root:  python3 scripts/harvest/refresh.py [wy ut id or]
 For each state it finds the newest published report, downloads it, runs that
 state's parser, checks the result, and rewrites data/harvest/<st>.json only when
-the numbers changed and the checks pass. Colorado's PDFs only appear after a page
-loads in a browser, so CO is refreshed separately (see README).
+the numbers changed and the checks pass. Colorado's PDFs sit behind a JavaScript
+viewer, so CO uses headless Chromium (scripts/harvest/co_fetch.mjs, needs Node + Playwright).
 """
 import os, re, sys, json, subprocess, urllib.request, urllib.parse, html, datetime
 
@@ -136,7 +136,46 @@ def or_():
     H = json.load(open(os.path.join(WORK, 'or_harvest_raw.json')))
     return year, f'{year} harvest summaries (Oregon Department of Fish and Wildlife, mandatory harvest reporting)', [{'label': f'ODFW big game harvest statistics ({year})', 'url': idx}], H
 
-STATES = {'wy': wy, 'ut': ut, 'id': id_, 'or': or_}
+CO_PAGES = [  # (species stats page, [file names in co_build.py, in page order])
+    ('hunting-elk/elk-statistics', ['co_elk']),
+    ('hunting-deer/deer-statistics', ['co_deer']),
+    ('hunting-pronghorn/pronghorn-statistics', ['co_pronghorn']),
+    ('hunting-moose/moose-statistics', ['co_moose']),
+    ('hunting-bighorn-sheep/bighorn-sheep-statistics', ['co_sheep', 'co_dsheep']),  # Rocky Mountain first, then desert
+    ('hunting-mountain-goat/mountain-goat-statistics', ['co_goat']),
+    ('hunting-bear/bear-statistics', ['co_bear']),
+]
+CO_LABEL = {'co_elk': 'Elk', 'co_deer': 'Deer', 'co_pronghorn': 'Pronghorn', 'co_moose': 'Moose', 'co_sheep': 'Rocky Mountain Bighorn Sheep',
+            'co_dsheep': 'Desert Bighorn Sheep', 'co_goat': 'Mountain Goat', 'co_bear': 'Bear'}
+
+def co():
+    found = {}
+    for slug, names in CO_PAGES:
+        idx = 'https://cpw.state.co.us/activities/hunting/big-game/' + slug
+        hits = []
+        for u, t in links(get(idx), idx):
+            m = re.match(r'(\d{4}) Harvest Report$', re.sub(r'\s+', ' ', t).strip())
+            if m and 'widencollective.com/assets/share' in u: hits.append((int(m.group(1)), u))
+        if not hits: raise RuntimeError('no harvest report links on ' + idx)
+        y = max(h[0] for h in hits)
+        newest = [u for yy, u in hits if yy == y]
+        if len(newest) < len(names): raise RuntimeError(f'{idx}: expected {len(names)} {y} reports, found {len(newest)}')
+        for n, u in zip(names, newest): found[n] = (y, u)
+    year = max(y for y, u in found.values())
+    stale = [n for n, (y, u) in found.items() if y != year]
+    if stale:
+        print(f'co: {year} reports not out yet for {stale}; keeping the published year until all are out'); return None
+    r = subprocess.run(['node', os.path.join(HERE, 'co_fetch.mjs'), RAW] + [f'{n}={u}' for n, (y, u) in found.items()], capture_output=True, text=True)
+    print(r.stdout[-1500:])
+    if r.returncode: raise RuntimeError('download failed: ' + (r.stdout + r.stderr)[-800:])
+    for n in found:
+        subprocess.run(['pdftotext', '-layout', os.path.join(RAW, n + '.pdf'), os.path.join(RAW, n + '.txt')], check=True)
+    run('co_build.py')
+    H = json.load(open(os.path.join(WORK, 'co_harvest_raw.json')))
+    src = [{'label': f'CPW {year} {CO_LABEL[n]} Harvest Report', 'url': u} for n, (y, u) in found.items()]
+    return year, f'{year} Big Game Harvest Survey (Colorado Parks and Wildlife), by hunt code', src, H
+
+STATES = {'wy': wy, 'ut': ut, 'id': id_, 'or': or_, 'co': co}
 
 # ---------- checks + write ----------
 def check_and_write(st, year, survey, sources, H):
@@ -165,7 +204,8 @@ if __name__ == '__main__':
     failed = []
     for st in todo:
         try:
-            check_and_write(st, *STATES[st]())
+            res = STATES[st]()
+            if res: check_and_write(st, *res)
         except Exception as e:
             print(f'{st}: ERROR {e}'); failed.append(st)
     if failed: print('FAILED:', failed); sys.exit(1)
